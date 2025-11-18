@@ -21,6 +21,7 @@ import Recurring from './pages/Recurring/Recurring';
 import Business from './pages/Business/Business';
 import Goals from './pages/Goals/Goals';
 import Settings from './pages/Settings/Settings';
+import ApiTest from './pages/ApiTest';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
             <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+            <Route path="/api-test" element={<ApiTest />} />
 
             {/* Protected Routes */}
             <Route

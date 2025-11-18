@@ -1,5 +1,9 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+// Debug: Log the API URL being used
+console.log('[API] Using API_URL:', API_URL);
+console.log('[API] Environment:', import.meta.env.MODE);
+
 // Helper function to get auth token
 const getAuthToken = () => {
   return localStorage.getItem('budgeta_auth_token');
@@ -18,17 +22,39 @@ const authFetch = async (url, options = {}) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${url}`, {
-    ...options,
-    headers,
-  });
+  const fullUrl = `${API_URL}${url}`;
+  console.log(`[API] ${options.method || 'GET'} ${fullUrl}`);
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Request failed');
+  try {
+    const response = await fetch(fullUrl, {
+      ...options,
+      headers,
+    });
+
+    console.log(`[API] Response status: ${response.status}`);
+
+    if (!response.ok) {
+      let errorMessage = 'Request failed';
+      try {
+        const error = await response.json();
+        errorMessage = error.error || error.message || errorMessage;
+      } catch (e) {
+        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('[API] Fetch error:', error);
+    
+    // Provide more specific error messages
+    if (error.message === 'Failed to fetch') {
+      throw new Error('Cannot connect to server. Please ensure the backend is running on http://localhost:5001');
+    }
+    
+    throw error;
   }
-
-  return response.json();
 };
 
 // ============ AUTH API ============
