@@ -32,6 +32,7 @@ const authFetch = async (url, options = {}) => {
   
   const headers = {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
     ...options.headers,
   };
 
@@ -46,6 +47,9 @@ const authFetch = async (url, options = {}) => {
     const response = await fetch(fullUrl, {
       ...options,
       headers,
+      mode: 'cors', // Explicitly set CORS mode
+      credentials: 'omit', // Don't send cookies (mobile-friendly)
+      cache: 'no-cache', // Prevent mobile caching issues
     });
 
     console.log(`[API] Response status: ${response.status}`);

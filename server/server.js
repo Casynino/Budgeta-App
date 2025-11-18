@@ -23,7 +23,7 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
+    // Allow requests with no origin (mobile apps, Postman, curl, etc.)
     if (!origin) return callback(null, true);
     
     // Check if origin matches any allowed origins (string or regex)
@@ -44,7 +44,11 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,
+  credentials: false, // Changed to false - we use Bearer tokens, not cookies (mobile-friendly)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['Content-Length', 'X-Request-Id'],
+  maxAge: 86400, // 24 hours - reduce preflight requests on mobile
 }));
 
 console.log(`🔒 CORS enabled for: ${allowedOrigins.join(', ')}`);

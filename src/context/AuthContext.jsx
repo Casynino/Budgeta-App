@@ -30,14 +30,20 @@ export const AuthProvider = ({ children }) => {
             const verifiedUser = await authAPI.getCurrentUser();
             setCurrentUser(verifiedUser);
           } catch (error) {
-            // Token invalid or expired
+            // Token invalid or expired - silently clear without showing error
             console.log('Token verification failed:', error.message);
-            logout();
+            // Don't set error state during init - this prevents "Load failed" on mobile
+            localStorage.removeItem('budgeta_auth_token');
+            localStorage.removeItem('budgeta_user_data');
+            setCurrentUser(null);
           }
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
-        logout();
+        // Don't set error state during init - this is just cleanup
+        localStorage.removeItem('budgeta_auth_token');
+        localStorage.removeItem('budgeta_user_data');
+        setCurrentUser(null);
       } finally {
         setLoading(false);
       }
