@@ -22,6 +22,7 @@ import Business from './pages/Business/Business';
 import Goals from './pages/Goals/Goals';
 import Settings from './pages/Settings/Settings';
 import ApiTest from './pages/ApiTest';
+import MobileTest from './pages/MobileTest';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
             <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
             <Route path="/api-test" element={<ApiTest />} />
+            <Route path="/mobile-test" element={<MobileTest />} />
 
             {/* Protected Routes */}
             <Route
