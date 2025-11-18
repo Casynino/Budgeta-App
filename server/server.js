@@ -18,6 +18,7 @@ const allowedOrigins = [
   process.env.CLIENT_URL || 'http://localhost:3000',
   'http://localhost:3000', // Development
   'http://localhost:5173', // Vite dev server alternative
+  /^https:\/\/.*\.vercel\.app$/, // All Vercel deployments
 ];
 
 app.use(cors({
@@ -25,11 +26,21 @@ app.use(cors({
     // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Check if origin matches any allowed origins (string or regex)
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') {
+        return allowed === origin;
+      } else if (allowed instanceof RegExp) {
+        return allowed.test(origin);
+      }
+      return false;
+    });
+    
+    if (isAllowed) {
       callback(null, true);
     } else {
       console.log(`⚠️  CORS blocked request from origin: ${origin}`);
-      console.log(`✅ Allowed origins: ${allowedOrigins.join(', ')}`);
+      console.log(`✅ Allowed origins:`, allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },
