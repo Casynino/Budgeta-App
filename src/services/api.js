@@ -1,8 +1,25 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Auto-detect production environment and use correct backend URL
+const getApiUrl = () => {
+  // First, check for environment variable
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
+  // If deployed (not localhost), use production backend
+  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return 'https://budgeta-app-vaxu.onrender.com/api';
+  }
+  
+  // Local development fallback
+  return 'http://localhost:5001/api';
+};
+
+const API_URL = getApiUrl();
 
 // Debug: Log the API URL being used
 console.log('[API] Using API_URL:', API_URL);
 console.log('[API] Environment:', import.meta.env.MODE);
+console.log('[API] Hostname:', window.location.hostname);
 
 // Helper function to get auth token
 const getAuthToken = () => {
@@ -47,10 +64,16 @@ const authFetch = async (url, options = {}) => {
     return response.json();
   } catch (error) {
     console.error('[API] Fetch error:', error);
+    console.error('[API] Attempted URL:', fullUrl);
     
     // Provide more specific error messages
     if (error.message === 'Failed to fetch') {
-      throw new Error('Cannot connect to server. Please ensure the backend is running on http://localhost:5001');
+      const isProduction = window.location.hostname !== 'localhost';
+      if (isProduction) {
+        throw new Error(`Cannot connect to backend at ${API_URL}. The server may be starting up (Render free tier takes 30-60 seconds on first request). Please wait a moment and try again.`);
+      } else {
+        throw new Error('Cannot connect to server. Please ensure the backend is running on http://localhost:5001');
+      }
     }
     
     throw error;
