@@ -53,15 +53,19 @@ const authFetch = async (url, options = {}) => {
     });
 
     console.log(`[API] Response status: ${response.status}`);
+    console.log(`[API] Response OK:`, response.ok);
 
     if (!response.ok) {
       let errorMessage = 'Request failed';
       try {
         const error = await response.json();
+        console.error('[API] Error response:', error);
         errorMessage = error.error || error.message || errorMessage;
       } catch (e) {
+        console.error('[API] Failed to parse error response:', e);
         errorMessage = `HTTP ${response.status}: ${response.statusText}`;
       }
+      console.error('[API] Throwing error:', errorMessage);
       throw new Error(errorMessage);
     }
 
