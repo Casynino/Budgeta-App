@@ -13,11 +13,30 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// CORS Configuration
+const allowedOrigins = [
+  process.env.CLIENT_URL || 'http://localhost:3000',
+  'http://localhost:3000', // Development
+  'http://localhost:5173', // Vite dev server alternative
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log(`⚠️  CORS blocked request from origin: ${origin}`);
+      console.log(`✅ Allowed origins: ${allowedOrigins.join(', ')}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
+
+console.log(`🔒 CORS enabled for: ${allowedOrigins.join(', ')}`);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
