@@ -17,11 +17,14 @@ const MobileTest = () => {
     addResult('API URL Detection', 'info', `Using: ${import.meta.env.VITE_API_URL || 'auto-detected'}`);
     addResult('Hostname', 'info', window.location.hostname);
     
-    // Determine API URL
-    const API_URL = import.meta.env.VITE_API_URL || 
-      (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
-        ? 'https://budgeta-app-vaxu.onrender.com/api'
-        : 'http://localhost:5001/api');
+    // Determine API URL (same logic as api.js)
+    const hostname = window.location.hostname;
+    const isProduction = hostname.includes('vercel.app') || 
+                         (hostname !== 'localhost' && hostname !== '127.0.0.1');
+    
+    const API_URL = isProduction 
+      ? 'https://budgeta-app-vaxu.onrender.com/api'
+      : 'http://localhost:5001/api';
     
     addResult('Final API URL', 'success', API_URL);
 

@@ -1,25 +1,27 @@
-// Auto-detect production environment and use correct backend URL
+// Determine API URL based on environment
 const getApiUrl = () => {
-  // First, check for environment variable
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
-  }
+  // Check if we're in production (deployed)
+  const hostname = window.location.hostname;
+  const isProduction = hostname.includes('vercel.app') || 
+                       (hostname !== 'localhost' && hostname !== '127.0.0.1');
   
-  // If deployed (not localhost), use production backend
-  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+  if (isProduction) {
+    // PRODUCTION: Always use Render backend
+    console.log('[API] 🌍 Production mode detected');
     return 'https://budgeta-app-vaxu.onrender.com/api';
+  } else {
+    // DEVELOPMENT: Use local backend
+    console.log('[API] 💻 Development mode detected');
+    return 'http://localhost:5001/api';
   }
-  
-  // Local development fallback
-  return 'http://localhost:5001/api';
 };
 
 const API_URL = getApiUrl();
 
 // Debug: Log the API URL being used
-console.log('[API] Using API_URL:', API_URL);
-console.log('[API] Environment:', import.meta.env.MODE);
-console.log('[API] Hostname:', window.location.hostname);
+console.log('[API] ✅ Using API_URL:', API_URL);
+console.log('[API] 📍 Hostname:', window.location.hostname);
+console.log('[API] 🔧 Environment:', import.meta.env.MODE);
 
 // Helper function to get auth token
 const getAuthToken = () => {
