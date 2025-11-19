@@ -217,9 +217,149 @@ export const preferencesAPI = {
   },
 };
 
+// ============ BUDGETS API ============
+export const budgetsAPI = {
+  getAll: async () => {
+    return authFetch('/budgets');
+  },
+
+  create: async (budgetData) => {
+    return authFetch('/budgets', {
+      method: 'POST',
+      body: JSON.stringify(budgetData),
+    });
+  },
+
+  update: async (id, budgetData) => {
+    return authFetch(`/budgets/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(budgetData),
+    });
+  },
+
+  delete: async (id) => {
+    return authFetch(`/budgets/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// ============ DEBTS API ============
+export const debtsAPI = {
+  getAll: async () => {
+    return authFetch('/debts');
+  },
+
+  create: async (debtData) => {
+    return authFetch('/debts', {
+      method: 'POST',
+      body: JSON.stringify(debtData),
+    });
+  },
+
+  update: async (id, debtData) => {
+    return authFetch(`/debts/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(debtData),
+    });
+  },
+
+  delete: async (id) => {
+    return authFetch(`/debts/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// ============ INVESTMENTS API ============
+export const investmentsAPI = {
+  getAll: async () => {
+    return authFetch('/investments');
+  },
+
+  create: async (investmentData) => {
+    return authFetch('/investments', {
+      method: 'POST',
+      body: JSON.stringify(investmentData),
+    });
+  },
+
+  update: async (id, investmentData) => {
+    return authFetch(`/investments/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(investmentData),
+    });
+  },
+
+  delete: async (id) => {
+    return authFetch(`/investments/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// ============ RECURRING PAYMENTS API ============
+export const recurringAPI = {
+  getAll: async () => {
+    return authFetch('/recurring');
+  },
+
+  create: async (recurringData) => {
+    return authFetch('/recurring', {
+      method: 'POST',
+      body: JSON.stringify(recurringData),
+    });
+  },
+
+  update: async (id, recurringData) => {
+    return authFetch(`/recurring/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(recurringData),
+    });
+  },
+
+  delete: async (id) => {
+    return authFetch(`/recurring/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// ============ GOALS API ============
+export const goalsAPI = {
+  getAll: async () => {
+    return authFetch('/goals');
+  },
+
+  create: async (goalData) => {
+    return authFetch('/goals', {
+      method: 'POST',
+      body: JSON.stringify(goalData),
+    });
+  },
+
+  update: async (id, goalData) => {
+    return authFetch(`/goals/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(goalData),
+    });
+  },
+
+  delete: async (id) => {
+    return authFetch(`/goals/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
 export default {
   auth: authAPI,
   accounts: accountsAPI,
   transactions: transactionsAPI,
   preferences: preferencesAPI,
+  budgets: budgetsAPI,
+  debts: debtsAPI,
+  investments: investmentsAPI,
+  recurring: recurringAPI,
+  goals: goalsAPI,
 };
