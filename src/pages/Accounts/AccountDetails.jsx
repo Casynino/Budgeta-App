@@ -17,9 +17,12 @@ const AccountDetails = () => {
   const { accountId } = useParams();
   const navigate = useNavigate();
   const { accounts, baseCurrency, displayCurrency } = useFinance();
-  const analytics = useAccountAnalytics(accountId);
+  
+  // Convert accountId to number since URL params are strings
+  const accountIdNum = parseInt(accountId);
+  const analytics = useAccountAnalytics(accountIdNum);
 
-  const account = accounts.find(acc => acc.id === accountId);
+  const account = accounts.find(acc => acc.id === accountIdNum);
 
   if (!account) {
     return (
