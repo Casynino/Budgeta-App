@@ -15,7 +15,7 @@ export const useFinance = () => {
 };
 
 export const FinanceProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { currentUser: user } = useAuth();
   
   // Core State
   const [accounts, setAccounts] = useState([]);

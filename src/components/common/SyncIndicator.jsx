@@ -5,11 +5,11 @@ import { useAuth } from '../../context/AuthContext';
 import { formatDistanceToNow } from 'date-fns';
 
 const SyncIndicator = () => {
-  const { user } = useAuth();
+  const { currentUser } = useAuth();
   const { isLoading, isSyncing, syncError, lastSyncTime } = useFinance();
 
   // Don't show if no user (offline mode)
-  if (!user) {
+  if (!currentUser) {
     return (
       <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-500/10 text-gray-400">
         <CloudOff className="w-4 h-4" />
