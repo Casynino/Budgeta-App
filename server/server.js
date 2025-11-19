@@ -6,6 +6,11 @@ import authRoutes from './routes/auth.js';
 import accountRoutes from './routes/accounts.js';
 import transactionRoutes from './routes/transactions.js';
 import preferenceRoutes from './routes/preferences.js';
+import budgetRoutes from './routes/budgets.js';
+import debtRoutes from './routes/debts.js';
+import investmentRoutes from './routes/investments.js';
+import recurringRoutes from './routes/recurring.js';
+import goalRoutes from './routes/goals.js';
 
 // Load environment variables
 dotenv.config();
@@ -66,6 +71,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/accounts', accountRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/preferences', preferenceRoutes);
+app.use('/api/budgets', budgetRoutes);
+app.use('/api/debts', debtRoutes);
+app.use('/api/investments', investmentRoutes);
+app.use('/api/recurring', recurringRoutes);
+app.use('/api/goals', goalRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -76,13 +86,19 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to Budgeta API',
-    version: '1.0.0',
+    version: '2.0.0',
+    description: 'Production-ready backend - all data stored in database',
     endpoints: {
       health: '/health',
       auth: '/api/auth',
       accounts: '/api/accounts',
       transactions: '/api/transactions',
       preferences: '/api/preferences',
+      budgets: '/api/budgets',
+      debts: '/api/debts',
+      investments: '/api/investments',
+      recurring: '/api/recurring',
+      goals: '/api/goals',
     },
   });
 });
@@ -118,16 +134,23 @@ const startServer = async () => {
       console.log(`📡 API URL: http://localhost:${PORT}`);
       console.log(`🏥 Health check: http://localhost:${PORT}/health`);
       console.log('\n📚 Available endpoints:');
-      console.log('   POST   /api/auth/register');
-      console.log('   POST   /api/auth/login');
-      console.log('   GET    /api/auth/me');
-      console.log('   GET    /api/accounts');
-      console.log('   POST   /api/accounts');
-      console.log('   GET    /api/transactions');
-      console.log('   POST   /api/transactions');
-      console.log('   GET    /api/preferences');
-      console.log('   PUT    /api/preferences');
-      console.log('\n✨ Ready to accept requests!');
+      console.log('   Authentication:');
+      console.log('     POST   /api/auth/register');
+      console.log('     POST   /api/auth/login');
+      console.log('     GET    /api/auth/me');
+      console.log('   Core Data:');
+      console.log('     CRUD   /api/accounts');
+      console.log('     CRUD   /api/transactions');
+      console.log('   Financial Management:');
+      console.log('     CRUD   /api/budgets');
+      console.log('     CRUD   /api/debts');
+      console.log('     CRUD   /api/investments');
+      console.log('     CRUD   /api/recurring');
+      console.log('     CRUD   /api/goals');
+      console.log('   Settings:');
+      console.log('     GET/PUT /api/preferences');
+      console.log('\n✨ Production-ready: All data stored in database (no localStorage)');
+      console.log('✨ Ready to accept requests!');
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);

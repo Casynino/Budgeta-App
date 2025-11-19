@@ -83,6 +83,82 @@ export const initDatabase = async () => {
       )
     `;
 
+    // Create budgets table
+    await sql`
+      CREATE TABLE IF NOT EXISTS budgets (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        category VARCHAR(50) NOT NULL,
+        amount DECIMAL(15, 2) NOT NULL,
+        spent DECIMAL(15, 2) DEFAULT 0,
+        period VARCHAR(20) DEFAULT 'monthly',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    // Create debts table
+    await sql`
+      CREATE TABLE IF NOT EXISTS debts (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        type VARCHAR(20) NOT NULL,
+        name VARCHAR(100) NOT NULL,
+        total_amount DECIMAL(15, 2) NOT NULL,
+        remaining_amount DECIMAL(15, 2) NOT NULL,
+        interest_rate DECIMAL(5, 2) DEFAULT 0,
+        due_date DATE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    // Create investments table
+    await sql`
+      CREATE TABLE IF NOT EXISTS investments (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        name VARCHAR(100) NOT NULL,
+        type VARCHAR(50) NOT NULL,
+        amount DECIMAL(15, 2) NOT NULL,
+        current_value DECIMAL(15, 2) NOT NULL,
+        return_rate DECIMAL(5, 2) DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    // Create recurring_payments table
+    await sql`
+      CREATE TABLE IF NOT EXISTS recurring_payments (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        name VARCHAR(100) NOT NULL,
+        amount DECIMAL(15, 2) NOT NULL,
+        category VARCHAR(50) NOT NULL,
+        frequency VARCHAR(20) NOT NULL,
+        next_date DATE NOT NULL,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    // Create goals table
+    await sql`
+      CREATE TABLE IF NOT EXISTS goals (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        name VARCHAR(100) NOT NULL,
+        target_amount DECIMAL(15, 2) NOT NULL,
+        current_amount DECIMAL(15, 2) DEFAULT 0,
+        deadline DATE,
+        category VARCHAR(50),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
     // Create indexes for better query performance
     await sql`
       CREATE INDEX IF NOT EXISTS idx_accounts_user_id ON accounts(user_id)
@@ -99,8 +175,32 @@ export const initDatabase = async () => {
     await sql`
       CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date)
     `;
+    
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_budgets_user_id ON budgets(user_id)
+    `;
+    
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_debts_user_id ON debts(user_id)
+    `;
+    
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_investments_user_id ON investments(user_id)
+    `;
+    
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_recurring_payments_user_id ON recurring_payments(user_id)
+    `;
+    
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_goals_user_id ON goals(user_id)
+    `;
 
     console.log('✅ Database tables initialized successfully');
+    console.log('   - users, accounts, transactions');
+    console.log('   - budgets, debts, investments');
+    console.log('   - recurring_payments, goals');
+    console.log('   - user_preferences');
     return true;
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);
