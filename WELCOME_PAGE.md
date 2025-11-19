@@ -59,7 +59,7 @@ The Budgeta Welcome/Landing page is a beautiful, conversion-focused introduction
 **Purpose:** Social proof and credibility
 
 **Metrics Displayed:**
-- 10k+ Active Users
+- 10k+ Secure Sessions
 - $2M+ Money Managed
 - 95% Satisfaction Rate
 - 24/7 Support Available

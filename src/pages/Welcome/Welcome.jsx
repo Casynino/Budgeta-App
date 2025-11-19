@@ -69,7 +69,7 @@ const Welcome = () => {
   ];
 
   const stats = [
-    { number: '10k+', label: 'Active Users' },
+    { number: '10k+', label: 'Secure Sessions' },
     { number: '$2M+', label: 'Money Managed' },
     { number: '95%', label: 'Satisfaction Rate' },
     { number: '24/7', label: 'Support Available' },
