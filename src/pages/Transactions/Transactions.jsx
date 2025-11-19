@@ -12,7 +12,7 @@ import { TRANSACTION_CATEGORIES } from '../../constants/categories';
 import { formatCurrency, formatDate } from '../../utils/helpers';
 
 const Transactions = () => {
-  const { transactions, addTransaction, updateTransaction, deleteTransaction } = useFinance();
+  const { transactions, addTransaction, updateTransaction, deleteTransaction, accounts, selectedAccount } = useFinance();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,6 +20,7 @@ const Transactions = () => {
   const [filterCategory, setFilterCategory] = useState('all');
 
   const [formData, setFormData] = useState({
+    accountId: selectedAccount || (accounts.length > 0 ? accounts[0].id : ''),
     type: 'expense',
     category: '',
     amount: '',
@@ -32,6 +33,7 @@ const Transactions = () => {
     if (transaction) {
       setEditingTransaction(transaction);
       setFormData({
+        accountId: transaction.accountId || (selectedAccount || (accounts.length > 0 ? accounts[0].id : '')),
         type: transaction.type,
         category: transaction.category,
         amount: transaction.amount,
@@ -42,6 +44,7 @@ const Transactions = () => {
     } else {
       setEditingTransaction(null);
       setFormData({
+        accountId: selectedAccount || (accounts.length > 0 ? accounts[0].id : ''),
         type: 'expense',
         category: '',
         amount: '',
@@ -278,6 +281,18 @@ const Transactions = () => {
         }
       >
         <form onSubmit={handleSubmit} className="space-y-4">
+          <Select
+            label="Account"
+            name="accountId"
+            value={formData.accountId}
+            onChange={(e) => setFormData({ ...formData, accountId: e.target.value })}
+            options={accounts.map(acc => ({
+              value: acc.id,
+              label: `${acc.icon} ${acc.name}`,
+            }))}
+            required
+          />
+
           <Select
             label="Type"
             name="type"

@@ -58,7 +58,25 @@ export const FinanceProvider = ({ children }) => {
         setDisplayCurrency(currencyData.display || 'USD');
       }
 
-      setTransactions(savedTransactions ? JSON.parse(savedTransactions) : mockTransactions);
+      // Load transactions and fix orphaned ones (transactions without accountId)
+      let loadedTransactions = savedTransactions ? JSON.parse(savedTransactions) : mockTransactions;
+      
+      // FIX: Assign orphaned transactions to the first/default account
+      if (loadedAccounts.length > 0) {
+        const defaultAccountId = loadedAccounts.find(acc => acc.isDefault)?.id || loadedAccounts[0].id;
+        loadedTransactions = loadedTransactions.map(transaction => {
+          if (!transaction.accountId) {
+            console.log(`[FinanceContext] Fixed orphaned transaction: ${transaction.id} → assigned to account ${defaultAccountId}`);
+            return {
+              ...transaction,
+              accountId: defaultAccountId
+            };
+          }
+          return transaction;
+        });
+      }
+      
+      setTransactions(loadedTransactions);
       setBudgets(savedBudgets ? JSON.parse(savedBudgets) : mockBudgets);
       setDebts(savedDebts ? JSON.parse(savedDebts) : mockDebts);
       setInvestments(savedInvestments ? JSON.parse(savedInvestments) : mockInvestments);
