@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFinance } from '../../context/FinanceContext';
 import { useAuth } from '../../context/AuthContext';
 import CurrencySelector from '../common/CurrencySelector';
+import SyncIndicator from '../common/SyncIndicator';
 
 const Header = ({ onMenuClick }) => {
   const { mode, setMode } = useFinance();
@@ -64,6 +65,11 @@ const Header = ({ onMenuClick }) => {
 
           {/* Currency Selector */}
           <CurrencySelector compact />
+
+          {/* Sync Indicator */}
+          <div className="hidden md:block">
+            <SyncIndicator />
+          </div>
 
           {/* Notifications */}
           <button className="relative p-2.5 rounded-xl hover:bg-dark-700 transition-all duration-300">
