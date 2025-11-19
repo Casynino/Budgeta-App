@@ -94,45 +94,121 @@ export const FinanceProvider = ({ children }) => {
               const migratedAccounts = [];
               for (const account of localAccounts) {
                 try {
-                  const created = await accountsAPI.create(account);
+                  // Map frontend account structure to backend structure
+                  const backendAccount = {
+                    name: account.name,
+                    type: account.type,
+                    icon: account.icon,
+                    color: account.color,
+                    currency: account.currency || 'USD',
+                    initialBalance: account.balance || account.initialBalance || 0,
+                    isDefault: account.isDefault || account.is_default || false
+                  };
+                  
+                  console.log('[FinanceContext] 🔄 Creating account on backend...', backendAccount.name);
+                  const created = await accountsAPI.create(backendAccount);
+                  console.log('[FinanceContext] ✅ Account created:', created.id);
                   migratedAccounts.push(created);
                 } catch (err) {
-                  console.error('[FinanceContext] Failed to migrate account:', err);
-                  migratedAccounts.push(account); // Keep local version
+                  console.error('[FinanceContext] ❌ Failed to migrate account:', err);
+                  // Don't keep local version - skip failed accounts
                 }
               }
+              
+              // Create account ID mapping (old ID → new ID)
+              const accountIdMap = {};
+              localAccounts.forEach((oldAccount, index) => {
+                if (migratedAccounts[index]) {
+                  accountIdMap[oldAccount.id] = migratedAccounts[index].id;
+                }
+              });
+              
+              console.log('[FinanceContext] 📋 Account ID mapping:', accountIdMap);
               
               const migratedTransactions = [];
               for (const transaction of localTransactions) {
                 try {
-                  const created = await transactionsAPI.create(transaction);
+                  // Map old account ID to new backend account ID
+                  const newAccountId = accountIdMap[transaction.accountId] || migratedAccounts[0]?.id;
+                  
+                  if (!newAccountId) {
+                    console.warn('[FinanceContext] ⚠️ No account for transaction, skipping');
+                    continue;
+                  }
+                  
+                  const backendTransaction = {
+                    accountId: newAccountId,
+                    type: transaction.type,
+                    amount: transaction.amount,
+                    category: transaction.category,
+                    description: transaction.description || '',
+                    date: transaction.date
+                  };
+                  
+                  console.log('[FinanceContext] 🔄 Creating transaction on backend...');
+                  const created = await transactionsAPI.create(backendTransaction);
+                  console.log('[FinanceContext] ✅ Transaction created:', created.id);
                   migratedTransactions.push(created);
                 } catch (err) {
-                  console.error('[FinanceContext] Failed to migrate transaction:', err);
-                  migratedTransactions.push(transaction); // Keep local version
+                  console.error('[FinanceContext] ❌ Failed to migrate transaction:', err);
+                  // Don't keep local version - skip failed transactions
                 }
               }
               
               setAccounts(migratedAccounts);
               setTransactions(migratedTransactions);
               
+              // Update localStorage with migrated data (with backend IDs)
+              localStorage.setItem('budgeta_accounts', JSON.stringify(migratedAccounts));
+              localStorage.setItem('budgeta_transactions', JSON.stringify(migratedTransactions));
+              
               if (migratedAccounts.length > 0) {
-                const defaultAcc = migratedAccounts.find(acc => acc.isDefault) || migratedAccounts[0];
+                const defaultAcc = migratedAccounts.find(acc => acc.isDefault || acc.is_default) || migratedAccounts[0];
                 setSelectedAccount(defaultAcc.id);
               }
               
-              console.log('[FinanceContext] ✅ Migration complete');
+              console.log('[FinanceContext] ✅ Migration complete:', {
+                accounts: migratedAccounts.length,
+                transactions: migratedTransactions.length
+              });
               setLastSyncTime(new Date().toISOString());
             } else {
-              // No data anywhere - use defaults
-              console.log('[FinanceContext] 🆕 No data found, using defaults');
-              setAccounts(DEFAULT_ACCOUNTS);
+              // No data anywhere - create defaults on backend
+              console.log('[FinanceContext] 🆕 No data found, creating defaults on backend...');
+              const defaultAccounts = [];
+              
+              for (const account of DEFAULT_ACCOUNTS) {
+                try {
+                  const backendAccount = {
+                    name: account.name,
+                    type: account.type,
+                    icon: account.icon,
+                    color: account.color,
+                    currency: account.currency || 'USD',
+                    initialBalance: account.balance || 0,
+                    isDefault: account.isDefault || false
+                  };
+                  
+                  const created = await accountsAPI.create(backendAccount);
+                  defaultAccounts.push(created);
+                } catch (err) {
+                  console.error('[FinanceContext] ❌ Failed to create default account:', err);
+                }
+              }
+              
+              setAccounts(defaultAccounts);
               setTransactions([]);
               
-              if (DEFAULT_ACCOUNTS.length > 0) {
-                const defaultAcc = DEFAULT_ACCOUNTS.find(acc => acc.isDefault) || DEFAULT_ACCOUNTS[0];
+              // Cache to localStorage
+              localStorage.setItem('budgeta_accounts', JSON.stringify(defaultAccounts));
+              localStorage.setItem('budgeta_transactions', JSON.stringify([]));
+              
+              if (defaultAccounts.length > 0) {
+                const defaultAcc = defaultAccounts.find(acc => acc.isDefault || acc.is_default) || defaultAccounts[0];
                 setSelectedAccount(defaultAcc.id);
               }
+              
+              setLastSyncTime(new Date().toISOString());
             }
           }
         } else {
@@ -188,14 +264,18 @@ export const FinanceProvider = ({ children }) => {
     loadData();
   }, [user]);
 
-  // Save to localStorage whenever data changes
+  // Save to localStorage whenever data changes (but not during initial load)
   useEffect(() => {
-    localStorage.setItem('budgeta_accounts', JSON.stringify(accounts));
-  }, [accounts]);
+    if (!isLoading) {
+      localStorage.setItem('budgeta_accounts', JSON.stringify(accounts));
+    }
+  }, [accounts, isLoading]);
 
   useEffect(() => {
-    localStorage.setItem('budgeta_transactions', JSON.stringify(transactions));
-  }, [transactions]);
+    if (!isLoading) {
+      localStorage.setItem('budgeta_transactions', JSON.stringify(transactions));
+    }
+  }, [transactions, isLoading]);
 
   useEffect(() => {
     localStorage.setItem('budgeta_budgets', JSON.stringify(budgets));
