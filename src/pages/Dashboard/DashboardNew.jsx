@@ -100,7 +100,19 @@ const DashboardNew = () => {
   // Calculate total balance from ALL accounts (all-time, not just this month)
   const totalBalance = accounts.reduce((sum, acc) => sum + getAccountBalance(acc.id), 0);
   
-  // Monthly balance for comparison
+  // Calculate ALL-TIME income and expenses (not just this month)
+  const allTimeIncome = transactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+  
+  const allTimeExpenses = transactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+  
+  const allTimeSavings = allTimeIncome - allTimeExpenses;
+  const savingsRate = allTimeIncome > 0 ? (allTimeSavings / allTimeIncome) * 100 : 0;
+  
+  // Monthly balance for comparison (from summary hook)
   const monthlyBalance = summary.totalIncome - summary.totalExpense;
 
   // Prepare donut chart data
@@ -200,8 +212,8 @@ const DashboardNew = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-sm font-medium mb-1">Total Income</p>
-              <p className="text-2xl font-bold text-neon-green">{formatCurrency(summary.totalIncome, baseCurrency, displayCurrency)}</p>
-              <p className="text-gray-500 text-xs mt-1">This month</p>
+              <p className="text-2xl font-bold text-neon-green">{formatCurrency(allTimeIncome, baseCurrency, displayCurrency)}</p>
+              <p className="text-gray-500 text-xs mt-1">All time</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
               <TrendingUp className="w-6 h-6 text-neon-green" />
@@ -213,8 +225,8 @@ const DashboardNew = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-sm font-medium mb-1">Total Expenses</p>
-              <p className="text-2xl font-bold text-danger-400">{formatCurrency(summary.totalExpense, baseCurrency, displayCurrency)}</p>
-              <p className="text-gray-500 text-xs mt-1">This month</p>
+              <p className="text-2xl font-bold text-danger-400">{formatCurrency(allTimeExpenses, baseCurrency, displayCurrency)}</p>
+              <p className="text-gray-500 text-xs mt-1">All time</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
               <TrendingDown className="w-6 h-6 text-danger-400" />
@@ -226,8 +238,8 @@ const DashboardNew = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-sm font-medium mb-1">Savings</p>
-              <p className="text-2xl font-bold text-primary-400">{formatCurrency(summary.netSavings, baseCurrency, displayCurrency)}</p>
-              <p className="text-gray-500 text-xs mt-1">{summary.savingsRate.toFixed(1)}% rate</p>
+              <p className="text-2xl font-bold text-primary-400">{formatCurrency(allTimeSavings, baseCurrency, displayCurrency)}</p>
+              <p className="text-gray-500 text-xs mt-1">{savingsRate.toFixed(1)}% rate</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Wallet className="w-6 h-6 text-primary-400" />
