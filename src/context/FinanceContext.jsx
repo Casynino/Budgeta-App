@@ -14,6 +14,28 @@ export const useFinance = () => {
   return context;
 };
 
+// Helper function to transform backend data to frontend format
+const transformTransaction = (txn) => ({
+  ...txn,
+  accountId: txn.account_id || txn.accountId,
+  userId: txn.user_id || txn.userId,
+  amount: parseFloat(txn.amount) || 0,
+  createdAt: txn.created_at || txn.createdAt,
+  updatedAt: txn.updated_at || txn.updatedAt,
+  accountName: txn.account_name || txn.accountName,
+  accountIcon: txn.account_icon || txn.accountIcon,
+  accountColor: txn.account_color || txn.accountColor
+});
+
+const transformAccount = (acc) => ({
+  ...acc,
+  userId: acc.user_id || acc.userId,
+  isDefault: acc.is_default ?? acc.isDefault,
+  initialBalance: parseFloat(acc.initial_balance ?? acc.initialBalance) || 0,
+  createdAt: acc.created_at || acc.createdAt,
+  updatedAt: acc.updated_at || acc.updatedAt
+});
+
 export const FinanceProvider = ({ children }) => {
   const { currentUser: user } = useAuth();
   
@@ -61,15 +83,25 @@ export const FinanceProvider = ({ children }) => {
             transactions: transactionsData.length
           });
           
+          // Transform backend data to frontend format (snake_case → camelCase)
+          const transformedAccounts = accountsData.map(transformAccount);
+          const transformedTransactions = transactionsData.map(transformTransaction);
+          
+          console.log('[FinanceContext] 🔄 Transformed data:', {
+            accounts: transformedAccounts.length,
+            transactions: transformedTransactions.length,
+            sampleTransaction: transformedTransactions[0]
+          });
+          
           // If backend has data, use it
-          if (accountsData.length > 0 || transactionsData.length > 0) {
-            const loadedAccounts = accountsData.length > 0 ? accountsData : DEFAULT_ACCOUNTS;
+          if (transformedAccounts.length > 0 || transformedTransactions.length > 0) {
+            const loadedAccounts = transformedAccounts.length > 0 ? transformedAccounts : DEFAULT_ACCOUNTS;
             setAccounts(loadedAccounts);
-            setTransactions(transactionsData);
+            setTransactions(transformedTransactions);
             
             // Cache to localStorage
             localStorage.setItem('budgeta_accounts', JSON.stringify(loadedAccounts));
-            localStorage.setItem('budgeta_transactions', JSON.stringify(transactionsData));
+            localStorage.setItem('budgeta_transactions', JSON.stringify(transformedTransactions));
             
             // Set default account
             if (loadedAccounts.length > 0) {
@@ -318,7 +350,8 @@ export const FinanceProvider = ({ children }) => {
           date: transaction.date || new Date().toISOString(),
         });
         console.log('[FinanceContext] ✅ Transaction created:', created.id);
-        setTransactions([created, ...transactions]);
+        const transformedTransaction = transformTransaction(created);
+        setTransactions([transformedTransaction, ...transactions]);
         setLastSyncTime(new Date().toISOString());
       } else {
         // Offline mode - local only
@@ -353,7 +386,8 @@ export const FinanceProvider = ({ children }) => {
         console.log('[FinanceContext] 🔄 Updating transaction on backend...');
         const updated = await transactionsAPI.update(id, updatedTransaction);
         console.log('[FinanceContext] ✅ Transaction updated:', id);
-        setTransactions(transactions.map(t => t.id === id ? { ...t, ...updated } : t));
+        const transformedTransaction = transformTransaction(updated);
+        setTransactions(transactions.map(t => t.id === id ? transformedTransaction : t));
         setLastSyncTime(new Date().toISOString());
       } else {
         // Offline mode - local only
@@ -403,14 +437,15 @@ export const FinanceProvider = ({ children }) => {
         console.log('[FinanceContext] 🔄 Creating account on backend...');
         const created = await accountsAPI.create({
           ...account,
-          balance: account.balance || 0,
+          initialBalance: account.balance || account.initialBalance || 0,
           createdAt: new Date().toISOString(),
         });
         console.log('[FinanceContext] ✅ Account created:', created.id);
-        setAccounts([...accounts, created]);
+        const transformedAccount = transformAccount(created);
+        setAccounts([...accounts, transformedAccount]);
         setLastSyncTime(new Date().toISOString());
-        return created;
-      } else {
+        return transformedAccount;
+      } else{
         // Offline mode - local only
         const newAccount = {
           ...account,
@@ -447,7 +482,8 @@ export const FinanceProvider = ({ children }) => {
         console.log('[FinanceContext] 🔄 Updating account on backend...');
         const updated = await accountsAPI.update(id, updatedAccount);
         console.log('[FinanceContext] ✅ Account updated:', id);
-        setAccounts(accounts.map(a => a.id === id ? { ...a, ...updated } : a));
+        const transformedAccount = transformAccount(updated);
+        setAccounts(accounts.map(a => a.id === id ? transformedAccount : a));
         setLastSyncTime(new Date().toISOString());
       } else {
         // Offline mode - local only
@@ -465,7 +501,9 @@ export const FinanceProvider = ({ children }) => {
 
   const deleteAccount = async (id) => {
     // Don't allow deleting if it's the only account or has transactions
-    const accountTransactions = transactions.filter(t => t.accountId === id);
+    const accountTransactions = transactions.filter(t => 
+      t.accountId === id || t.account_id === id
+    );
     if (accounts.length === 1) {
       throw new Error('Cannot delete the only account');
     }
@@ -508,11 +546,16 @@ export const FinanceProvider = ({ children }) => {
 
   // Calculate account balance from transactions
   const getAccountBalance = (accountId) => {
-    const accountTransactions = transactions.filter(t => t.accountId === accountId);
+    // Support both camelCase and snake_case property names
+    const accountTransactions = transactions.filter(t => 
+      t.accountId === accountId || t.account_id === accountId
+    );
+    
     return accountTransactions.reduce((balance, transaction) => {
+      const amount = parseFloat(transaction.amount) || 0;
       return transaction.type === 'income' 
-        ? balance + transaction.amount 
-        : balance - transaction.amount;
+        ? balance + amount 
+        : balance - amount;
     }, 0);
   };
 
