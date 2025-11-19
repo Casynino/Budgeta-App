@@ -14,7 +14,7 @@ import { TRANSACTION_CATEGORIES } from '../../constants/categories';
 import { useFinance } from '../../context/FinanceContext';
 
 const DashboardNew = () => {
-  const { transactions, addTransaction, accounts, selectedAccount, baseCurrency, displayCurrency } = useFinance();
+  const { transactions, addTransaction, accounts, selectedAccount, baseCurrency, displayCurrency, getAccountBalance } = useFinance();
   const summary = useFinancialSummary();
   const [showBalance, setShowBalance] = useState(true);
   const [activeTab, setActiveTab] = useState('income'); // income or outcome
@@ -97,8 +97,11 @@ const DashboardNew = () => {
     ? TRANSACTION_CATEGORIES.INCOME 
     : TRANSACTION_CATEGORIES.EXPENSE;
 
-  // Calculate total balance
-  const totalBalance = summary.totalIncome - summary.totalExpense;
+  // Calculate total balance from ALL accounts (all-time, not just this month)
+  const totalBalance = accounts.reduce((sum, acc) => sum + getAccountBalance(acc.id), 0);
+  
+  // Monthly balance for comparison
+  const monthlyBalance = summary.totalIncome - summary.totalExpense;
 
   // Prepare donut chart data
   const expenseChartData = Object.entries(summary.expensesByCategory).map(([category, amount]) => {
@@ -143,16 +146,16 @@ const DashboardNew = () => {
               </div>
               <div className="flex items-center gap-2 mt-3">
                 <div className={`flex items-center gap-1 text-sm font-semibold ${
-                  totalBalance >= 0 ? 'text-neon-green' : 'text-danger-400'
+                  monthlyBalance >= 0 ? 'text-neon-green' : 'text-danger-400'
                 }`}>
-                  {totalBalance >= 0 ? (
+                  {monthlyBalance >= 0 ? (
                     <TrendingUp className="w-4 h-4" />
                   ) : (
                     <TrendingDown className="w-4 h-4" />
                   )}
-                  <span>{Math.abs(summary.savingsRate).toFixed(1)}%</span>
+                  <span>{formatCurrency(Math.abs(monthlyBalance), baseCurrency, displayCurrency)}</span>
                 </div>
-                <span className="text-gray-500 text-sm">from last month</span>
+                <span className="text-gray-500 text-sm">this month</span>
               </div>
             </div>
 
