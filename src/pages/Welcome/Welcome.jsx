@@ -13,7 +13,11 @@ import {
   Sparkles,
   Lock,
   Zap,
-  Home
+  Home,
+  Key,
+  ShieldCheck,
+  Phone,
+  MessageCircle
 } from 'lucide-react';
 import Button from '../../components/common/Button';
 import { useAuth } from '../../context/AuthContext';
@@ -62,10 +66,31 @@ const Welcome = () => {
   ];
 
   const benefits = [
-    'No credit card required',
-    'Free to get started',
-    '7-day session security',
-    'No hidden fees',
+    {
+      icon: Lock,
+      text: 'Advanced Bank-Level Security (95%+ Safety)',
+      color: 'text-blue-400'
+    },
+    {
+      icon: Key,
+      text: 'End-to-End Data Encryption',
+      color: 'text-emerald-400'
+    },
+    {
+      icon: ShieldCheck,
+      text: 'Biometric & Secure Login (Fingerprint/Face ID)',
+      color: 'text-purple-400'
+    },
+    {
+      icon: Phone,
+      text: '24/7 Dedicated Support Team',
+      color: 'text-orange-400'
+    },
+    {
+      icon: MessageCircle,
+      text: 'Instant Live Chat & Email Assistance',
+      color: 'text-cyan-400'
+    },
   ];
 
   const stats = [
@@ -170,12 +195,15 @@ const Welcome = () => {
               )}
             </div>
 
-            {/* Benefits List */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
+            {/* Benefits List - Security Features */}
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm max-w-5xl mx-auto">
               {benefits.map((benefit, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-500" />
-                  <span>{benefit}</span>
+                <div 
+                  key={index} 
+                  className="flex items-center gap-2 bg-dark-800/50 px-4 py-2.5 rounded-lg border border-dark-700/50 hover:border-primary-500/30 transition-all duration-300 group"
+                >
+                  <benefit.icon className={`w-4 h-4 ${benefit.color} group-hover:scale-110 transition-transform duration-300`} />
+                  <span className="text-gray-300 font-medium">{benefit.text}</span>
                 </div>
               ))}
             </div>
