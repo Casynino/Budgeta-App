@@ -12,31 +12,31 @@ router.get('/', async (req, res) => {
   try {
     const { accountId, startDate, endDate, type, category } = req.query;
 
-    let query = sql`
+    // Fetch all transactions for user first
+    let transactions = await sql`
       SELECT t.*, a.name as account_name, a.icon as account_icon, a.color as account_color
       FROM transactions t
       LEFT JOIN accounts a ON t.account_id = a.id
       WHERE t.user_id = ${req.user.userId}
+      ORDER BY t.date DESC, t.created_at DESC
     `;
 
-    // Add filters if provided
+    // Apply filters in JavaScript (simpler and safer)
     if (accountId) {
-      query = sql`${query} AND t.account_id = ${accountId}`;
+      transactions = transactions.filter(t => t.account_id === parseInt(accountId));
     }
     if (startDate) {
-      query = sql`${query} AND t.date >= ${startDate}`;
+      transactions = transactions.filter(t => t.date >= startDate);
     }
     if (endDate) {
-      query = sql`${query} AND t.date <= ${endDate}`;
+      transactions = transactions.filter(t => t.date <= endDate);
     }
     if (type) {
-      query = sql`${query} AND t.type = ${type}`;
+      transactions = transactions.filter(t => t.type === type);
     }
     if (category) {
-      query = sql`${query} AND t.category = ${category}`;
+      transactions = transactions.filter(t => t.category === category);
     }
-
-    const transactions = await sql`${query} ORDER BY t.date DESC, t.created_at DESC`;
 
     res.json(transactions);
   } catch (error) {
