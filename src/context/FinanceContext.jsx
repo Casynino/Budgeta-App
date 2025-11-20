@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { mockTransactions, mockBudgets, mockDebts, mockInvestments, mockRecurringPayments, mockGoals } from '../data/mockData';
 import { DEFAULT_ACCOUNTS } from '../constants/accounts';
-import { accountsAPI, transactionsAPI } from '../services/api';
+import { accountsAPI, transactionsAPI, preferencesAPI } from '../services/api';
 import { useAuth } from './AuthContext';
 
 const FinanceContext = createContext();
@@ -56,6 +56,23 @@ export const FinanceProvider = ({ children }) => {
   
   // App State
   const [mode, setMode] = useState('personal'); // 'personal' or 'business'
+  
+  /**
+   * CRITICAL: Currency Storage Logic
+   * 
+   * - baseCurrency: The currency ALL amounts are stored in (database stores raw numbers)
+   * - displayCurrency: The currency for UI display only
+   * 
+   * Example: User with TZS as baseCurrency enters 600,000
+   * - Stored: 600000 (as number, no currency info)
+   * - Display: formatCurrency(600000, 'TZS', 'TZS') = TSh600,000
+   * 
+   * If baseCurrency = USD but user thinks they're entering TZS:
+   * - Stored: 600000 (system thinks it's USD)
+   * - Display: formatCurrency(600000, 'USD', 'TZS') = TSh1,500,000,000 (WRONG!)
+   * 
+   * FIX: Always load baseCurrency from backend preferences on login
+   */
   const [baseCurrency, setBaseCurrency] = useState('USD'); // Currency for storage (all amounts stored in this)
   const [displayCurrency, setDisplayCurrency] = useState('USD'); // Currency for display
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -71,11 +88,24 @@ export const FinanceProvider = ({ children }) => {
       
       try {
         if (user) {
-          // User logged in - fetch from backend
-          const [accountsData, transactionsData] = await Promise.all([
+          // User logged in - fetch from backend INCLUDING preferences
+          const [accountsData, transactionsData, preferencesData] = await Promise.all([
             accountsAPI.getAll().catch(() => []),
-            transactionsAPI.getAll().catch(() => [])
+            transactionsAPI.getAll().catch(() => []),
+            preferencesAPI.get().catch(() => null)
           ]);
+          
+          // Load currency preferences from backend FIRST
+          if (preferencesData) {
+            setBaseCurrency(preferencesData.base_currency || 'USD');
+            setDisplayCurrency(preferencesData.display_currency || 'USD');
+            setMode(preferencesData.mode || 'personal');
+            // Save to localStorage as backup
+            localStorage.setItem('budgeta_currency', JSON.stringify({
+              base: preferencesData.base_currency || 'USD',
+              display: preferencesData.display_currency || 'USD'
+            }));
+          }
           
           // Transform backend data to frontend format (snake_case → camelCase)
           const transformedAccounts = accountsData.map(transformAccount);
@@ -135,7 +165,6 @@ export const FinanceProvider = ({ children }) => {
         const savedInvestments = localStorage.getItem('budgeta_investments');
         const savedRecurring = localStorage.getItem('budgeta_recurring');
         const savedGoals = localStorage.getItem('budgeta_goals');
-        const savedCurrency = localStorage.getItem('budgeta_currency');
         
         setBudgets(savedBudgets ? JSON.parse(savedBudgets) : mockBudgets);
         setDebts(savedDebts ? JSON.parse(savedDebts) : mockDebts);
@@ -143,10 +172,14 @@ export const FinanceProvider = ({ children }) => {
         setRecurringPayments(savedRecurring ? JSON.parse(savedRecurring) : mockRecurringPayments);
         setGoals(savedGoals ? JSON.parse(savedGoals) : mockGoals);
         
-        if (savedCurrency) {
-          const currencyData = JSON.parse(savedCurrency);
-          setBaseCurrency(currencyData.base || 'USD');
-          setDisplayCurrency(currencyData.display || 'USD');
+        // Only load from localStorage if user is not logged in
+        if (!user) {
+          const savedCurrency = localStorage.getItem('budgeta_currency');
+          if (savedCurrency) {
+            const currencyData = JSON.parse(savedCurrency);
+            setBaseCurrency(currencyData.base || 'USD');
+            setDisplayCurrency(currencyData.display || 'USD');
+          }
         }
         
       } catch (error) {
@@ -199,13 +232,25 @@ export const FinanceProvider = ({ children }) => {
     localStorage.setItem('budgeta_goals', JSON.stringify(goals));
   }, [goals]);
 
-  // Save currency preferences
+  // Save currency preferences to BOTH localStorage AND backend
   useEffect(() => {
+    // Save to localStorage immediately
     localStorage.setItem('budgeta_currency', JSON.stringify({
       base: baseCurrency,
       display: displayCurrency
     }));
-  }, [baseCurrency, displayCurrency]);
+    
+    // Save to backend if user is logged in
+    if (user && !isLoading && !isSyncing) {
+      preferencesAPI.update({
+        baseCurrency: baseCurrency,
+        displayCurrency: displayCurrency,
+        mode: mode
+      }).catch(error => {
+        console.error('[FinanceContext] ❌ Error saving preferences:', error);
+      });
+    }
+  }, [baseCurrency, displayCurrency, mode, user, isLoading, isSyncing]);
 
   // Transaction CRUD (with backend sync)
   const addTransaction = async (transaction) => {
