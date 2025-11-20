@@ -9,15 +9,10 @@ import {
   BarChart3,
   Wallet,
   ArrowRight,
-  CheckCircle2,
   Sparkles,
   Lock,
   Zap,
-  Home,
-  Key,
-  ShieldCheck,
-  Phone,
-  MessageCircle
+  Home
 } from 'lucide-react';
 import Button from '../../components/common/Button';
 import { useAuth } from '../../context/AuthContext';
@@ -65,33 +60,6 @@ const Welcome = () => {
     },
   ];
 
-  const benefits = [
-    {
-      icon: Lock,
-      text: 'Advanced Bank-Level Security (95%+ Safety)',
-      color: 'text-blue-400'
-    },
-    {
-      icon: Key,
-      text: 'End-to-End Data Encryption',
-      color: 'text-emerald-400'
-    },
-    {
-      icon: ShieldCheck,
-      text: 'Biometric & Secure Login (Fingerprint/Face ID)',
-      color: 'text-purple-400'
-    },
-    {
-      icon: Phone,
-      text: '24/7 Dedicated Support Team',
-      color: 'text-orange-400'
-    },
-    {
-      icon: MessageCircle,
-      text: 'Instant Live Chat & Email Assistance',
-      color: 'text-cyan-400'
-    },
-  ];
 
   const stats = [
     { number: '10k+', label: 'Secure Sessions' },
@@ -195,18 +163,6 @@ const Welcome = () => {
               )}
             </div>
 
-            {/* Benefits List - Security Features */}
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm max-w-5xl mx-auto">
-              {benefits.map((benefit, index) => (
-                <div 
-                  key={index} 
-                  className="flex items-center gap-2 bg-dark-800/50 px-4 py-2.5 rounded-lg border border-dark-700/50 hover:border-primary-500/30 transition-all duration-300 group"
-                >
-                  <benefit.icon className={`w-4 h-4 ${benefit.color} group-hover:scale-110 transition-transform duration-300`} />
-                  <span className="text-gray-300 font-medium">{benefit.text}</span>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* Hero Image/Dashboard Preview */}
