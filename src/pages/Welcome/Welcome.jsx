@@ -355,6 +355,85 @@ const Welcome = () => {
         </div>
       </section>
 
+      {/* Partners & Sponsors Section */}
+      <section className="py-16 px-4 bg-dark-900">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-2">
+              Trusted By
+            </p>
+            <h3 className="text-2xl md:text-3xl font-bold text-white">
+              Our Partners & <span className="bg-gradient-to-r from-primary-500 to-purple-500 bg-clip-text text-transparent">Sponsors</span>
+            </h3>
+          </div>
+          
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
+              {/* Ripple Network */}
+              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
+                <div className="text-gray-400 group-hover:text-white transition-colors duration-300">
+                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
+                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">Ripple</text>
+                  </svg>
+                </div>
+              </div>
+
+              {/* Stripe */}
+              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
+                <div className="text-gray-400 group-hover:text-primary-400 transition-colors duration-300">
+                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
+                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">Stripe</text>
+                  </svg>
+                </div>
+              </div>
+
+              {/* Plaid */}
+              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
+                <div className="text-gray-400 group-hover:text-cyan-400 transition-colors duration-300">
+                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
+                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">Plaid</text>
+                  </svg>
+                </div>
+              </div>
+
+              {/* Visa */}
+              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
+                <div className="text-gray-400 group-hover:text-blue-400 transition-colors duration-300">
+                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
+                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">VISA</text>
+                  </svg>
+                </div>
+              </div>
+
+              {/* Mastercard */}
+              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
+                <div className="text-gray-400 group-hover:text-orange-400 transition-colors duration-300">
+                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
+                    <text x="5" y="28" fontFamily="Arial, sans-serif" fontSize="14" fontWeight="bold">Mastercard</text>
+                  </svg>
+                </div>
+              </div>
+
+              {/* PayPal */}
+              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
+                <div className="text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
+                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
+                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">PayPal</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Trust indicator */}
+          <div className="mt-12 text-center">
+            <p className="text-sm text-gray-500">
+              Secured partnerships ensuring <span className="text-primary-400 font-semibold">your financial safety</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 px-4 border-t border-dark-700">
         <div className="container mx-auto">
