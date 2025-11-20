@@ -151,12 +151,6 @@ const Welcome = () => {
 
         <div className="container mx-auto relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 border border-primary-500/30 rounded-full mb-6">
-              <Sparkles className="w-4 h-4 text-primary-400" />
-              <span className="text-primary-400 text-sm font-semibold">Your Personal Finance Super App</span>
-            </div>
-
             {/* Main Heading */}
             <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
               Take Control of Your
