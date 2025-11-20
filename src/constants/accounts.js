@@ -25,13 +25,15 @@ export const ACCOUNT_COLORS = {
   [ACCOUNT_TYPES.INVESTMENT]: '#06b6d4',
 };
 
-// Quick Add Popular Accounts - ONLY these 5 accounts
+// Quick Add Popular Accounts - EXACTLY 7 accounts as specified
 export const POPULAR_ACCOUNTS = [
   { name: 'CRDB – PLC', type: ACCOUNT_TYPES.BANK, icon: '🏦', color: '#0066b2' },
   { name: 'NMB', type: ACCOUNT_TYPES.BANK, icon: '🏦', color: '#10b981' },
   { name: 'M-Pesa', type: ACCOUNT_TYPES.MOBILE_MONEY, icon: '📱', color: '#10b981' },
   { name: 'Airtel Money', type: ACCOUNT_TYPES.MOBILE_MONEY, icon: '📱', color: '#ed1c24' },
-  { name: 'Mix By Yas', type: ACCOUNT_TYPES.DIGITAL_WALLET, icon: '💳', color: '#8b5cf6' },
+  { name: 'Mix By Yas', type: ACCOUNT_TYPES.MOBILE_MONEY, icon: '📱', color: '#8b5cf6' },
+  { name: 'Binance', type: ACCOUNT_TYPES.DIGITAL_WALLET, icon: '💳', color: '#f0b90b' },
+  { name: 'Cash Kibubu', type: ACCOUNT_TYPES.CASH, icon: '💵', color: '#22c55e' },
 ];
 
 export const DEFAULT_ACCOUNTS = [

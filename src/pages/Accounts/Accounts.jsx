@@ -165,7 +165,7 @@ const Accounts = () => {
 
       {/* Quick Add Popular Accounts */}
       <Card>
-        <h3 className="text-lg font-semibold text-white mb-4">Quick Add Popular Accounts • v2</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Quick Add Popular Accounts • v3</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {POPULAR_ACCOUNTS.map((acc, index) => (
             <button
