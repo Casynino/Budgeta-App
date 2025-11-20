@@ -167,7 +167,7 @@ const Accounts = () => {
       <Card>
         <h3 className="text-lg font-semibold text-white mb-4">Quick Add Popular Accounts</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[...POPULAR_ACCOUNTS.MOBILE_MONEY.slice(0, 2), ...POPULAR_ACCOUNTS.CRYPTO.slice(0, 1), ...POPULAR_ACCOUNTS.DIGITAL_WALLETS.slice(0, 1)].map((acc, index) => (
+          {POPULAR_ACCOUNTS.map((acc, index) => (
             <button
               key={index}
               onClick={() => handleQuickAdd(acc)}
