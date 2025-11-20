@@ -139,17 +139,36 @@ const DashboardNew = () => {
   const testTimes100 = testDivision * 100;
   const testRounded = Math.round(testTimes100);
   
-  console.log('🔥🔥🔥 [Dashboard v4.0 - STEP BY STEP] Calculation:', {
-    step1_directExpense: directTotalExpense,
-    step2_directIncome: directTotalIncome,
-    step3_division: testDivision,
-    step4_times100: testTimes100,
-    step5_rounded: testRounded,
-    final_spendPercentage: spendPercentage,
-    comparison: {
-      expected: (679 / 7323 * 100).toFixed(2) + '%',
-      actual: spendPercentage + '%',
-      match: spendPercentage === Math.round(679 / 7323 * 100)
+  // SANITY CHECK: Hardcoded calculation to prove JavaScript works
+  const sanityCheck679 = 679;
+  const sanityCheck7323 = 7323;
+  const sanityDivision = sanityCheck679 / sanityCheck7323;
+  const sanityPercent = Math.round(sanityDivision * 100);
+  
+  console.log('🔥🔥🔥 [Dashboard v5.0 - FINAL DEBUG] IMPOSSIBLE BUG:', {
+    CLAIMED_VALUES: {
+      expense: directTotalExpense,
+      income: directTotalIncome,
+    },
+    CALCULATION_RESULT: {
+      division: testDivision,
+      times100: testTimes100,
+      rounded: testRounded,
+      final: spendPercentage
+    },
+    SANITY_CHECK_HARDCODED: {
+      expense: 679,
+      income: 7323,
+      division: sanityDivision,
+      percent: sanityPercent,
+      proves_js_works: sanityPercent === 9
+    },
+    PROOF_OF_BUG: {
+      claimed_division: `${directTotalExpense} / ${directTotalIncome} = ${testDivision}`,
+      correct_division: `679 / 7323 = ${sanityDivision}`,
+      values_match: directTotalExpense === 679 && directTotalIncome === 7323,
+      division_matches: testDivision === sanityDivision,
+      BUG_IS_HERE: testDivision !== sanityDivision ? 'VALUES ARE LYING!' : 'CALCULATION IS WRONG!'
     }
   });
 
