@@ -95,6 +95,7 @@ export const AuthProvider = ({ children }) => {
   // Login user with API
   const login = async (email, password) => {
     try {
+      console.log('[AuthContext] 🔐 Starting login process...');
       setError(null);
       setLoading(true);
 
@@ -103,17 +104,23 @@ export const AuthProvider = ({ children }) => {
         throw new Error('Email and password are required');
       }
 
+      console.log('[AuthContext] 📡 Calling API login...');
       // Call API to login
       const response = await authAPI.login(email, password);
+      console.log('[AuthContext] ✅ API login successful:', response);
 
       // Save session
+      console.log('[AuthContext] 💾 Saving session to localStorage...');
       localStorage.setItem('budgeta_auth_token', response.token);
       localStorage.setItem('budgeta_user_data', JSON.stringify(response.user));
+      console.log('[AuthContext] ✅ Session saved');
 
       setCurrentUser(response.user);
       setLoading(false);
+      console.log('[AuthContext] ✅ Login complete!');
       return { success: true, user: response.user };
     } catch (error) {
+      console.error('[AuthContext] ❌ Login failed:', error);
       const errorMessage = error.message || 'Login failed';
       setError(errorMessage);
       setLoading(false);

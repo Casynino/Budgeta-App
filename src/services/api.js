@@ -28,7 +28,7 @@ const getAuthToken = () => {
   return localStorage.getItem('budgeta_auth_token');
 };
 
-// Helper function to make authenticated requests
+// Helper function to make authenticated requests with timeout
 const authFetch = async (url, options = {}) => {
   const token = getAuthToken();
   
@@ -45,6 +45,10 @@ const authFetch = async (url, options = {}) => {
   const fullUrl = `${API_URL}${url}`;
   console.log(`[API] ${options.method || 'GET'} ${fullUrl}`);
 
+  // Add timeout to prevent infinite loading (60 seconds for cold start)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000);
+
   try {
     const response = await fetch(fullUrl, {
       ...options,
@@ -52,7 +56,10 @@ const authFetch = async (url, options = {}) => {
       mode: 'cors', // Explicitly set CORS mode
       credentials: 'omit', // Don't send cookies (mobile-friendly)
       cache: 'no-cache', // Prevent mobile caching issues
+      signal: controller.signal, // Add abort signal
     });
+
+    clearTimeout(timeoutId);
 
     console.log(`[API] Response status: ${response.status}`);
     console.log(`[API] Response OK:`, response.ok);
@@ -73,14 +80,20 @@ const authFetch = async (url, options = {}) => {
 
     return response.json();
   } catch (error) {
+    clearTimeout(timeoutId);
     console.error('[API] Fetch error:', error);
     console.error('[API] Attempted URL:', fullUrl);
+    
+    // Handle abort/timeout
+    if (error.name === 'AbortError') {
+      throw new Error('Request timeout: Server is taking too long to respond. The backend may be waking up (Render free tier). Please try again in a few seconds.');
+    }
     
     // Provide more specific error messages
     if (error.message === 'Failed to fetch') {
       const isProduction = window.location.hostname !== 'localhost';
       if (isProduction) {
-        throw new Error(`Cannot connect to backend at ${API_URL}. The server may be starting up (Render free tier takes 30-60 seconds on first request). Please wait a moment and try again.`);
+        throw new Error('Cannot connect to backend. The server may be starting up (Render free tier takes 30-60 seconds). Please wait and try again.');
       } else {
         throw new Error('Cannot connect to server. Please ensure the backend is running on http://localhost:5001');
       }

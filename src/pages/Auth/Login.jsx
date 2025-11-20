@@ -15,6 +15,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loadingMessage, setLoadingMessage] = useState('Signing in...');
 
   const handleChange = (e) => {
     setFormData({
@@ -28,13 +29,25 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
+    setLoadingMessage('Signing in...');
+
+    // Show "waking up backend" message after 3 seconds
+    const wakingTimer = setTimeout(() => {
+      setLoadingMessage('Waking up backend server (this may take 30-60 seconds on first login)...');
+    }, 3000);
 
     try {
-      await login(formData.email, formData.password);
+      const result = await login(formData.email, formData.password);
+      clearTimeout(wakingTimer);
+      setLoadingMessage('Success! Redirecting...');
+      
+      // Small delay to show success message
+      await new Promise(resolve => setTimeout(resolve, 500));
       navigate('/dashboard');
     } catch (err) {
+      clearTimeout(wakingTimer);
+      console.error('[Login] Error:', err);
       setError(err.message || 'Failed to login. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
@@ -131,7 +144,7 @@ const Login = () => {
               disabled={loading}
               icon={<LogIn className="w-5 h-5" />}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? loadingMessage : 'Sign In'}
             </Button>
           </form>
 
