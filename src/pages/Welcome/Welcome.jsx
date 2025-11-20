@@ -152,35 +152,13 @@ const Welcome = () => {
         <div className="container mx-auto relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             {/* Main Heading */}
-            <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-              <span className="inline-block opacity-0 animate-[fadeInUp_0.8s_ease-out_forwards]">
-                Your{' '}
-              </span>
-              <span className="inline-block bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent opacity-0 animate-[fadeInUp_0.8s_ease-out_0.1s_forwards] animate-[pulse_2s_ease-in-out_1s_infinite]">
-                Money
-              </span>
-              <span className="inline-block opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards]">
-                , Your{' '}
-              </span>
-              <span className="inline-block bg-gradient-to-r from-primary-400 via-purple-400 to-pink-400 bg-clip-text text-transparent opacity-0 animate-[fadeInUp_0.8s_ease-out_0.3s_forwards] animate-[pulse_2s_ease-in-out_1.5s_infinite]">
-                Rules
-              </span>
-              <span className="inline-block ml-2 opacity-0 animate-[fadeInScale_0.8s_ease-out_0.4s_forwards]">
-                💸
-              </span>
+            <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight opacity-0 animate-[fadeIn_1s_ease-out_forwards]">
+              Your <span className="text-transparent bg-gradient-to-r from-primary-400 to-cyan-400 bg-clip-text">Money</span>, Your <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">Rules</span>
             </h2>
 
             {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed opacity-0 animate-[fadeIn_1s_ease-out_0.6s_forwards]">
-              See it all, control it all, and{' '}
-              <span className="text-transparent bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text font-semibold">
-                level up
-              </span>{' '}
-              your financial game with powerful{' '}
-              <span className="text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text font-semibold">
-                analytics
-              </span>
-              .
+            <p className="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed opacity-0 animate-[fadeIn_1s_ease-out_0.3s_forwards]">
+              See it all, control it all, and <span className="text-white font-semibold">level up</span> your financial game with powerful <span className="text-primary-400 font-semibold">analytics</span>.
             </p>
 
             {/* CTA Buttons */}
