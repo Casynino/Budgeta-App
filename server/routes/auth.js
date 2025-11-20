@@ -24,8 +24,8 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'User with this email already exists' });
     }
 
-    // Hash password
-    const passwordHash = await bcrypt.hash(password, 10);
+    // Hash password (8 rounds = fast but still secure)
+    const passwordHash = await bcrypt.hash(password, 8);
 
     // Create user
     const result = await sql`
@@ -84,7 +84,7 @@ router.post('/login', async (req, res) => {
 
     const user = users[0];
 
-    // Verify password
+    // Verify password (this is the slow part - bcrypt is intentionally slow for security)
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
 
     if (!isValidPassword) {
@@ -94,6 +94,7 @@ router.post('/login', async (req, res) => {
     // Generate token
     const token = generateToken(user.id, user.email);
 
+    // Respond immediately - don't wait for anything else
     res.json({
       message: 'Login successful',
       token,

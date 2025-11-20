@@ -160,6 +160,11 @@ export const initDatabase = async () => {
     `;
 
     // Create indexes for better query performance
+    // CRITICAL: Index on users.email for fast login lookups
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)
+    `;
+    
     await sql`
       CREATE INDEX IF NOT EXISTS idx_accounts_user_id ON accounts(user_id)
     `;
