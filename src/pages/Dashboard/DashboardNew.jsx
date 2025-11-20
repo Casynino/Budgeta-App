@@ -125,23 +125,21 @@ const DashboardNew = () => {
     };
   }).sort((a, b) => b.value - a.value).slice(0, 5);
 
-  // NUCLEAR OPTION: Calculate percentage directly from displayed values
-  // Using the EXACT same values shown in the cards
-  const cardTotalIncome = summary.totalIncome;
-  const cardTotalExpense = summary.totalExpense;
-  
-  // Simple, direct calculation - no tricks
-  const spendPercentage = cardTotalIncome > 0
-    ? Math.round((cardTotalExpense / cardTotalIncome) * 100)
+  // FIXED: Use ALL-TIME values (same as sidebar cards) for percentage calculation
+  // The sidebar shows "Total Income: $7,327" (all-time) and "Total Expenses: $679" (all-time)
+  // So the percentage MUST use all-time values too!
+  const spendPercentage = allTimeIncome > 0
+    ? Math.round((allTimeExpenses / allTimeIncome) * 100)
     : 0;
   
-  console.log(`🚀🚀🚀 [Dashboard v7.0 - ${new Date().toISOString()}] DIRECT CALCULATION:`, {
-    income: cardTotalIncome,
-    expense: cardTotalExpense,
+  console.log(`✅✅✅ [Dashboard v8.0 - FIXED] Using ALL-TIME values:`, {
+    allTimeIncome: allTimeIncome,
+    allTimeExpenses: allTimeExpenses,
     percentage: spendPercentage,
-    calculation: `Math.round((${cardTotalExpense} / ${cardTotalIncome}) * 100) = ${spendPercentage}%`,
-    rawCalc: (cardTotalExpense / cardTotalIncome),
-    times100: (cardTotalExpense / cardTotalIncome) * 100
+    calculation: `Math.round((${allTimeExpenses} / ${allTimeIncome}) * 100) = ${spendPercentage}%`,
+    monthlyIncome: summary.totalIncome,
+    monthlyExpense: summary.totalExpense,
+    note: 'Now matches sidebar values!'
   });
 
   return (
@@ -342,7 +340,7 @@ const DashboardNew = () => {
             </div>
 
             {expenseChartData.map((item, index) => {
-              const percentage = ((item.value / summary.totalExpense) * 100).toFixed(0);
+              const percentage = ((item.value / allTimeExpenses) * 100).toFixed(0);
               return (
                 <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between">
