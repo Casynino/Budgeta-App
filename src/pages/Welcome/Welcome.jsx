@@ -341,8 +341,8 @@ const Welcome = () => {
                 <Button 
                   variant="secondary" 
                   size="lg" 
-                  className="bg-white text-primary-600 hover:bg-gray-100"
-                  icon={<ArrowRight className="w-5 h-5" />}
+                  className="bg-white !text-primary-600 hover:bg-gray-100 font-semibold"
+                  icon={<ArrowRight className="w-5 h-5 text-primary-600" />}
                 >
                   Get Started Free
                 </Button>
