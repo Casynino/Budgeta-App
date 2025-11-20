@@ -83,10 +83,10 @@ const Accounts = () => {
     handleCloseModal();
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this account? This action cannot be undone.')) {
       try {
-        deleteAccount(id);
+        await deleteAccount(id);
       } catch (error) {
         alert(error.message);
       }
