@@ -456,7 +456,7 @@ const Welcome = () => {
               <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
             </div>
             <div className="text-sm text-gray-400">
-              © 2024 Budgeta. All rights reserved.
+              © 2025 Budgeta. All rights reserved. Developed by Nino.
             </div>
           </div>
         </div>
