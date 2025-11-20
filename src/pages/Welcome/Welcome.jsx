@@ -181,8 +181,8 @@ const Welcome = () => {
           <div className="max-w-4xl mx-auto text-center">
             {/* Main Heading with Sequential Typing Animation */}
             <h2 
-              className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white mb-10 leading-tight px-4 italic ${
-                typingComplete && !prefersReducedMotion ? 'animate-glow' : ''
+              className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white mb-10 leading-tight px-4 italic relative overflow-hidden ${
+                typingComplete && !prefersReducedMotion ? 'animate-shine-text' : ''
               }`} 
               style={{ fontStyle: 'italic', fontWeight: 600 }}
             >
@@ -560,21 +560,32 @@ const Welcome = () => {
             }
           }
 
-          @keyframes glow {
-            0%, 100% {
-              text-shadow: 0 0 10px rgba(16, 185, 129, 0.3),
-                           0 0 20px rgba(59, 130, 246, 0.2),
-                           0 0 30px rgba(168, 85, 247, 0.1);
+          @keyframes shine {
+            0% {
+              left: -100%;
             }
-            50% {
-              text-shadow: 0 0 20px rgba(16, 185, 129, 0.4),
-                           0 0 30px rgba(59, 130, 246, 0.3),
-                           0 0 40px rgba(168, 85, 247, 0.2);
+            100% {
+              left: 100%;
             }
           }
 
-          .animate-glow {
-            animation: glow 3s ease-in-out infinite;
+          .animate-shine-text::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+              90deg,
+              transparent 0%,
+              rgba(255, 255, 255, 0.1) 25%,
+              rgba(255, 255, 255, 0.3) 50%,
+              rgba(255, 255, 255, 0.1) 75%,
+              transparent 100%
+            );
+            animation: shine 3s ease-in-out infinite;
+            pointer-events: none;
           }
 
           @keyframes typing {
