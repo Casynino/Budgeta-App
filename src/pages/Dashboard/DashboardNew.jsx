@@ -131,11 +131,12 @@ const DashboardNew = () => {
     : 0;
   
   // Debug logging
-  console.log('[Dashboard] Spending Calculation:', {
+  console.log('🔥 [Dashboard v2.0 - FIXED] Spending Calculation:', {
     totalIncome: summary.totalIncome,
     totalExpense: summary.totalExpense,
     spendPercentage: spendPercentage,
-    formula: `${summary.totalExpense} / ${summary.totalIncome} * 100 = ${spendPercentage}%`
+    formula: `${summary.totalExpense} / ${summary.totalIncome} * 100 = ${spendPercentage}%`,
+    timestamp: new Date().toISOString()
   });
 
   return (
@@ -309,6 +310,7 @@ const DashboardNew = () => {
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-4xl font-bold text-white">{spendPercentage}%</span>
                 <span className="text-sm text-gray-400">Total Spend</span>
+                <span className="text-xs text-gray-500 mt-1">v2.0</span>
               </div>
             </div>
 
