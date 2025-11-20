@@ -170,15 +170,26 @@ const Welcome = () => {
           <div className="max-w-4xl mx-auto text-center">
             {/* Main Heading with Typing Animation */}
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white mb-10 leading-tight px-4 italic" style={{ fontStyle: 'italic', fontWeight: 600 }}>
-              <span className="inline-block overflow-hidden border-r-2 border-white animate-[typing_2.5s_steps(26)_forwards,blink_0.5s_step-end_2.5s_infinite]" style={{ maxWidth: '0ch', whiteSpace: 'nowrap' }}>
-                SPEND <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text">SMART</span>, LIVE <span className="text-transparent bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text">BETTER</span>
-              </span>
+              <div>
+                SPEND <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text">SMART</span>
+              </div>
+              <div className="mt-2">
+                LIVE <span className="text-transparent bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text">BETTER</span>
+              </div>
             </h2>
 
             {/* Subtitle */}
-            <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed px-6 opacity-0 animate-[fadeIn_1s_ease-out_2.5s_forwards]">
-              Master your <span className="text-primary-400 font-semibold">money</span>, track every <span className="text-white font-semibold">shilling</span>, understand your <span className="text-white font-semibold">spending</span>, and unlock <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text font-semibold">financial freedom</span>.
-            </p>
+            <div className="text-base sm:text-lg md:text-xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed px-6 opacity-0 animate-[fadeIn_1s_ease-out_2.5s_forwards]">
+              <p>
+                Master your <span className="text-primary-400 font-semibold">money</span>, track every <span className="text-white font-semibold">shilling</span>,
+              </p>
+              <p>
+                understand your <span className="text-white font-semibold">spending</span> and unlock
+              </p>
+              <p>
+                <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text font-semibold">financial freedom</span>.
+              </p>
+            </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
