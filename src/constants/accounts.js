@@ -5,6 +5,7 @@ export const ACCOUNT_TYPES = {
   DIGITAL_WALLET: 'digital_wallet',
   CASH: 'cash',
   INVESTMENT: 'investment',
+  SACCOS: 'saccos',
 };
 
 export const ACCOUNT_ICONS = {
@@ -14,6 +15,7 @@ export const ACCOUNT_ICONS = {
   [ACCOUNT_TYPES.DIGITAL_WALLET]: '💳',
   [ACCOUNT_TYPES.CASH]: '💵',
   [ACCOUNT_TYPES.INVESTMENT]: '📈',
+  [ACCOUNT_TYPES.SACCOS]: '🤝',
 };
 
 export const ACCOUNT_COLORS = {
@@ -23,9 +25,10 @@ export const ACCOUNT_COLORS = {
   [ACCOUNT_TYPES.DIGITAL_WALLET]: '#8b5cf6',
   [ACCOUNT_TYPES.CASH]: '#22c55e',
   [ACCOUNT_TYPES.INVESTMENT]: '#06b6d4',
+  [ACCOUNT_TYPES.SACCOS]: '#f97316',
 };
 
-// Quick Add Popular Accounts - EXACTLY 7 accounts as specified
+// Quick Add Popular Accounts - EXACTLY 8 accounts as specified
 export const POPULAR_ACCOUNTS = [
   { name: 'CRDB – PLC', type: ACCOUNT_TYPES.BANK, icon: '🏦', color: '#0066b2' },
   { name: 'NMB', type: ACCOUNT_TYPES.BANK, icon: '🏦', color: '#10b981' },
@@ -34,6 +37,7 @@ export const POPULAR_ACCOUNTS = [
   { name: 'Mix By Yas', type: ACCOUNT_TYPES.MOBILE_MONEY, icon: '📱', color: '#8b5cf6' },
   { name: 'Binance', type: ACCOUNT_TYPES.DIGITAL_WALLET, icon: '💳', color: '#f0b90b' },
   { name: 'Cash Kibubu', type: ACCOUNT_TYPES.CASH, icon: '💵', color: '#22c55e' },
+  { name: 'Kikoba', type: ACCOUNT_TYPES.SACCOS, icon: '🤝', color: '#f97316' },
 ];
 
 export const DEFAULT_ACCOUNTS = [
