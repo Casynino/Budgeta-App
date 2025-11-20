@@ -125,24 +125,32 @@ const DashboardNew = () => {
     };
   }).sort((a, b) => b.value - a.value).slice(0, 5);
 
+  // DIRECT calculation - bypass any caching/closure issues
+  const directTotalExpense = summary.totalExpense || 0;
+  const directTotalIncome = summary.totalIncome || 1;
+  
   // Calculate spend percentage using TOTAL expenses (not just top 5 categories)
-  const spendPercentage = summary.totalIncome > 0 
-    ? Math.round((summary.totalExpense / summary.totalIncome) * 100) 
+  const spendPercentage = directTotalIncome > 0 
+    ? Math.round((directTotalExpense / directTotalIncome) * 100) 
     : 0;
   
-  // Debug logging - DETAILED
-  console.log('🔥 [Dashboard v3.0 - TYPE CHECK] Values:', {
-    totalIncomeType: typeof summary.totalIncome,
-    totalIncomeValue: summary.totalIncome,
-    totalExpenseType: typeof summary.totalExpense,
-    totalExpenseValue: summary.totalExpense,
-    rawDivision: summary.totalExpense / summary.totalIncome,
-    times100: (summary.totalExpense / summary.totalIncome) * 100,
-    mathRounded: Math.round((summary.totalExpense / summary.totalIncome) * 100),
-    spendPercentage: spendPercentage,
-    manualCalc: (summary.totalExpense / summary.totalIncome * 100).toFixed(2),
-    formula: `${summary.totalExpense} / ${summary.totalIncome} * 100 = ${spendPercentage}%`,
-    summaryObject: summary
+  // Debug logging - SUPER DETAILED
+  const testDivision = directTotalExpense / directTotalIncome;
+  const testTimes100 = testDivision * 100;
+  const testRounded = Math.round(testTimes100);
+  
+  console.log('🔥🔥🔥 [Dashboard v4.0 - STEP BY STEP] Calculation:', {
+    step1_directExpense: directTotalExpense,
+    step2_directIncome: directTotalIncome,
+    step3_division: testDivision,
+    step4_times100: testTimes100,
+    step5_rounded: testRounded,
+    final_spendPercentage: spendPercentage,
+    comparison: {
+      expected: (679 / 7323 * 100).toFixed(2) + '%',
+      actual: spendPercentage + '%',
+      match: spendPercentage === Math.round(679 / 7323 * 100)
+    }
   });
 
   return (
