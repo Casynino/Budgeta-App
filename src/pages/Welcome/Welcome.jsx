@@ -176,14 +176,9 @@ const Welcome = () => {
             </h2>
 
             {/* Subtitle */}
-            <div className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed px-6 opacity-0 animate-[fadeIn_1s_ease-out_2.5s_forwards]">
-              <p className="mb-2">
-                Master your money, track every shilling, understand your spending,
-              </p>
-              <p>
-                and unlock financial freedom.
-              </p>
-            </div>
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed px-6 opacity-0 animate-[fadeIn_1s_ease-out_2.5s_forwards]">
+              Master your <span className="text-primary-400 font-semibold">money</span>, track every <span className="text-white font-semibold">shilling</span>, understand your <span className="text-white font-semibold">spending</span>, and unlock <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text font-semibold">financial freedom</span>.
+            </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
