@@ -125,10 +125,9 @@ const DashboardNew = () => {
     };
   }).sort((a, b) => b.value - a.value).slice(0, 5);
 
-  // Calculate spend percentage
-  const totalSpend = expenseChartData.reduce((sum, item) => sum + item.value, 0);
+  // Calculate spend percentage using TOTAL expenses (not just top 5 categories)
   const spendPercentage = summary.totalIncome > 0 
-    ? Math.round((totalSpend / summary.totalIncome) * 100) 
+    ? Math.round((summary.totalExpense / summary.totalIncome) * 100) 
     : 0;
 
   return (
@@ -329,7 +328,7 @@ const DashboardNew = () => {
             </div>
 
             {expenseChartData.map((item, index) => {
-              const percentage = ((item.value / totalSpend) * 100).toFixed(0);
+              const percentage = ((item.value / summary.totalExpense) * 100).toFixed(0);
               return (
                 <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between">
