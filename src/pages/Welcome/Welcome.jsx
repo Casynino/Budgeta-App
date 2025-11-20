@@ -573,19 +573,22 @@ const Welcome = () => {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
+            left: -150%;
+            width: 50%;
             height: 100%;
             background: linear-gradient(
-              90deg,
+              110deg,
               transparent 0%,
-              rgba(255, 255, 255, 0.1) 25%,
-              rgba(255, 255, 255, 0.3) 50%,
-              rgba(255, 255, 255, 0.1) 75%,
+              transparent 40%,
+              rgba(255, 255, 255, 0.05) 45%,
+              rgba(255, 255, 255, 0.15) 50%,
+              rgba(255, 255, 255, 0.05) 55%,
+              transparent 60%,
               transparent 100%
             );
-            animation: shine 3s ease-in-out infinite;
+            animation: shine 4s ease-in-out infinite;
             pointer-events: none;
+            transform: skewX(-20deg);
           }
 
           @keyframes typing {
