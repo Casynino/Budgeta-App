@@ -432,7 +432,7 @@ const Welcome = () => {
 
         <div className="container mx-auto relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            {/* Fun Gen Z Header - Powered By The Best */}
+            {/* Partner Header */}
             <div 
               key={`powered-${animationKey}`}
               className={`mb-8 transition-all duration-1000 ${
@@ -450,7 +450,7 @@ const Welcome = () => {
                   }`} 
                 />
                 <span className="text-xs font-bold text-transparent bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text">
-                  Powered By The Best ✨
+                  Partnered with
                 </span>
               </div>
             </div>
@@ -500,7 +500,7 @@ const Welcome = () => {
                       : 'opacity-0 animate-[fadeIn_1s_ease-in_2.5s_forwards]'
                   }`}
                 >
-                  Building Tomorrow, Today 🚀
+                  Designing the Future, Today.
                 </p>
               </div>
             </div>
