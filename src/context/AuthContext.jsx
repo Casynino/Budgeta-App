@@ -13,39 +13,28 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Initialize auth state from localStorage and verify with API
+  // Initialize auth state from localStorage (instant, no API call)
   useEffect(() => {
-    const initAuth = async () => {
+    const initAuth = () => {
       try {
         const token = localStorage.getItem('budgeta_auth_token');
         const userData = localStorage.getItem('budgeta_user_data');
         
         if (token && userData) {
           const user = JSON.parse(userData);
-          // Verify token with API
-          try {
-            const verifiedUser = await authAPI.getCurrentUser();
-            setCurrentUser(verifiedUser);
-          } catch (error) {
-            // Token invalid or expired - silently clear without showing error
-            console.log('Token verification failed:', error.message);
-            // Don't set error state during init - this prevents "Load failed" on mobile
-            localStorage.removeItem('budgeta_auth_token');
-            localStorage.removeItem('budgeta_user_data');
-            setCurrentUser(null);
-          }
+          // Trust localStorage immediately - no API verification (too slow)
+          setCurrentUser(user);
+          console.log('[AuthContext] ✅ User loaded from localStorage (instant)');
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
-        // Don't set error state during init - this is just cleanup
+        // Clear invalid data
         localStorage.removeItem('budgeta_auth_token');
         localStorage.removeItem('budgeta_user_data');
         setCurrentUser(null);
-      } finally {
-        setLoading(false);
       }
     };
 
