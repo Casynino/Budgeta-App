@@ -141,6 +141,12 @@ const DashboardNew = () => {
 
   return (
     <div className="space-y-6">
+      {/* DEBUG: Version Banner */}
+      <div className="bg-primary-500/20 border border-primary-500 rounded-lg p-2 text-center">
+        <span className="text-primary-400 text-xs font-mono">
+          DASHBOARD v3.0 LOADED | Expense: ${summary.totalExpense} | Income: ${summary.totalIncome} | Calc: {spendPercentage}%
+        </span>
+      </div>
       {/* Balance Header Card */}
       <Card variant="gradient" className="relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary-500/20 to-purple-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -309,8 +315,9 @@ const DashboardNew = () => {
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-4xl font-bold text-white">{spendPercentage}%</span>
-                <span className="text-sm text-gray-400">Total Spend</span>
-                <span className="text-xs text-gray-500 mt-1">v2.0</span>
+                <span className="text-sm text-gray-400">
+                  {summary.totalExpense} / {summary.totalIncome}
+                </span>
               </div>
             </div>
 
