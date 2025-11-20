@@ -27,6 +27,7 @@ const Welcome = () => {
   const { currentUser, loading } = useAuth();
   const [animationKey, setAnimationKey] = useState(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [typingComplete, setTypingComplete] = useState(false);
 
   // Detect reduced motion preference
   useEffect(() => {
@@ -41,7 +42,17 @@ const Welcome = () => {
   // Trigger animation on mount
   useEffect(() => {
     setAnimationKey(prev => prev + 1);
-  }, []);
+    
+    // Set typing complete after animation duration
+    if (!prefersReducedMotion) {
+      const timer = setTimeout(() => {
+        setTypingComplete(true);
+      }, 3500); // Line 1 (1.2s) + Line 2 (1.5s) + delay (0.8s)
+      return () => clearTimeout(timer);
+    } else {
+      setTypingComplete(true);
+    }
+  }, [prefersReducedMotion]);
 
   const features = [
     {
@@ -168,13 +179,45 @@ const Welcome = () => {
 
         <div className="container mx-auto relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            {/* Main Heading with Typing Animation */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white mb-10 leading-tight px-4 italic" style={{ fontStyle: 'italic', fontWeight: 600 }}>
-              <div>
-                SPEND <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text">SMART</span>
+            {/* Main Heading with Sequential Typing Animation */}
+            <h2 
+              className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white mb-10 leading-tight px-4 italic ${
+                typingComplete && !prefersReducedMotion ? 'animate-glow' : ''
+              }`} 
+              style={{ fontStyle: 'italic', fontWeight: 600 }}
+            >
+              {/* Line 1: SPEND SMART */}
+              <div 
+                key={`line1-${animationKey}`}
+                className="overflow-hidden"
+              >
+                <span 
+                  className={`inline-block ${
+                    prefersReducedMotion 
+                      ? '' 
+                      : 'animate-[typewriterLine1_1.2s_steps(11)_forwards]'
+                  }`}
+                  style={prefersReducedMotion ? { opacity: 1 } : { width: 0, whiteSpace: 'nowrap' }}
+                >
+                  SPEND <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text">SMART</span>
+                </span>
               </div>
-              <div className="mt-2">
-                LIVE <span className="text-transparent bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text">BETTER</span>
+              
+              {/* Line 2: LIVE BETTER */}
+              <div 
+                key={`line2-${animationKey}`}
+                className="mt-2 overflow-hidden"
+              >
+                <span 
+                  className={`inline-block ${
+                    prefersReducedMotion 
+                      ? '' 
+                      : 'animate-[typewriterLine2_1.5s_steps(11)_1.2s_forwards]'
+                  }`}
+                  style={prefersReducedMotion ? { opacity: 1 } : { width: 0, whiteSpace: 'nowrap' }}
+                >
+                  LIVE <span className="text-transparent bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text">BETTER</span>
+                </span>
               </div>
             </h2>
 
@@ -497,6 +540,41 @@ const Welcome = () => {
               opacity: 1;
               transform: scale(1);
             }
+          }
+
+          @keyframes typewriterLine1 {
+            from {
+              width: 0;
+            }
+            to {
+              width: 100%;
+            }
+          }
+
+          @keyframes typewriterLine2 {
+            from {
+              width: 0;
+            }
+            to {
+              width: 100%;
+            }
+          }
+
+          @keyframes glow {
+            0%, 100% {
+              text-shadow: 0 0 10px rgba(16, 185, 129, 0.3),
+                           0 0 20px rgba(59, 130, 246, 0.2),
+                           0 0 30px rgba(168, 85, 247, 0.1);
+            }
+            50% {
+              text-shadow: 0 0 20px rgba(16, 185, 129, 0.4),
+                           0 0 30px rgba(59, 130, 246, 0.3),
+                           0 0 40px rgba(168, 85, 247, 0.2);
+            }
+          }
+
+          .animate-glow {
+            animation: glow 3s ease-in-out infinite;
           }
 
           @keyframes typing {
