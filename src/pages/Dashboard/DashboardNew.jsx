@@ -129,6 +129,14 @@ const DashboardNew = () => {
   const spendPercentage = summary.totalIncome > 0 
     ? Math.round((summary.totalExpense / summary.totalIncome) * 100) 
     : 0;
+  
+  // Debug logging
+  console.log('[Dashboard] Spending Calculation:', {
+    totalIncome: summary.totalIncome,
+    totalExpense: summary.totalExpense,
+    spendPercentage: spendPercentage,
+    formula: `${summary.totalExpense} / ${summary.totalIncome} * 100 = ${spendPercentage}%`
+  });
 
   return (
     <div className="space-y-6">
