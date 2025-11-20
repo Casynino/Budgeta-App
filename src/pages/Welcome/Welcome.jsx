@@ -13,7 +13,11 @@ import {
   Sparkles,
   Lock,
   Zap,
-  Home
+  Home,
+  Key,
+  ShieldCheck,
+  Phone,
+  MessageCircle
 } from 'lucide-react';
 import Button from '../../components/common/Button';
 import { useAuth } from '../../context/AuthContext';
@@ -68,11 +72,31 @@ const Welcome = () => {
     'No hidden fees',
   ];
 
-  const stats = [
-    { number: '10k+', label: 'Secure Sessions' },
-    { number: '$2M+', label: 'Money Managed' },
-    { number: '95%', label: 'Satisfaction Rate' },
-    { number: '24/7', label: 'Support Available' },
+  const securityFeatures = [
+    { 
+      icon: Shield, 
+      title: 'Advanced Bank-Level Security',
+      subtitle: '95%+ Safety',
+      color: 'from-blue-500 to-cyan-500'
+    },
+    { 
+      icon: ShieldCheck, 
+      title: 'Biometric & Secure Login',
+      subtitle: 'Fingerprint/Face ID',
+      color: 'from-purple-500 to-pink-500'
+    },
+    { 
+      icon: Key, 
+      title: 'End-to-End Data Encryption',
+      subtitle: '& 24/7 Support Team',
+      color: 'from-emerald-500 to-green-500'
+    },
+    { 
+      icon: MessageCircle, 
+      title: 'Instant Live Chat',
+      subtitle: '& Email Assistance',
+      color: 'from-orange-500 to-red-500'
+    },
   ];
 
   return (
@@ -197,16 +221,19 @@ const Welcome = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Security Features Section */}
       <section className="py-16 px-4 bg-dark-800/50">
         <div className="container mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-500 to-purple-500 bg-clip-text text-transparent mb-2">
-                  {stat.number}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {securityFeatures.map((feature, index) => (
+              <div key={index} className="text-center group">
+                <div className={`w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className="w-7 h-7 text-white" />
                 </div>
-                <div className="text-gray-400 text-sm md:text-base">{stat.label}</div>
+                <h4 className="text-base md:text-lg font-semibold text-white mb-1 leading-snug">
+                  {feature.title}
+                </h4>
+                <p className="text-sm text-gray-400">{feature.subtitle}</p>
               </div>
             ))}
           </div>
