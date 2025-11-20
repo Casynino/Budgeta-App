@@ -429,7 +429,7 @@ const Welcome = () => {
                         ? 'border-r-0' 
                         : 'animate-[typing_1.8s_steps(7)_0.5s_forwards,blink_0.75s_step-end_2.3s_infinite]'
                     }`}
-                    style={prefersReducedMotion ? { width: 'auto' } : { width: 0, whiteSpace: 'nowrap' }}
+                    style={prefersReducedMotion ? { maxWidth: 'none' } : { maxWidth: 0, whiteSpace: 'nowrap' }}
                   >
                     <span className="bg-gradient-to-r from-primary-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                       Haolabs
@@ -493,7 +493,7 @@ const Welcome = () => {
               max-width: 0ch;
             }
             to {
-              max-width: 22ch;
+              max-width: 8ch;
             }
           }
 
