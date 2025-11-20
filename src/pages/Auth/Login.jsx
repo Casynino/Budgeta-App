@@ -29,12 +29,21 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setLoadingMessage('Signing in...');
+    
+    // Check if in production (backend on Render)
+    const isProduction = window.location.hostname.includes('vercel.app');
+    
+    // Show "waking up" message immediately in production since backend always sleeps
+    if (isProduction) {
+      setLoadingMessage('Connecting to backend (may take 30-60 seconds if server is asleep)...');
+    } else {
+      setLoadingMessage('Signing in...');
+    }
 
-    // Show "waking up backend" message after 3 seconds
+    // Show "waking up backend" message after 2 seconds if still loading
     const wakingTimer = setTimeout(() => {
-      setLoadingMessage('Waking up backend server (this may take 30-60 seconds on first login)...');
-    }, 3000);
+      setLoadingMessage('Waking up backend server (this may take 30-60 seconds)...');
+    }, 2000);
 
     try {
       const result = await login(formData.email, formData.password);
@@ -70,8 +79,21 @@ const Login = () => {
 
         {/* Login Card */}
         <div className="bg-dark-800 border border-dark-600 rounded-2xl shadow-card p-8">
+          {/* Loading Message */}
+          {loading && (
+            <div className="mb-6 p-4 bg-primary-500/10 border border-primary-500/50 rounded-xl">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-5 h-5 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-primary-400 text-sm font-medium">{loadingMessage}</p>
+              </div>
+              <div className="w-full bg-dark-700 rounded-full h-1.5 mt-3">
+                <div className="bg-primary-500 h-1.5 rounded-full animate-pulse" style={{width: '60%'}}></div>
+              </div>
+            </div>
+          )}
+
           {/* Error Message */}
-          {(error || authError) && (
+          {!loading && (error || authError) && (
             <div className="mb-6 p-4 bg-danger-500/10 border border-danger-500/50 rounded-xl flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-danger-500 flex-shrink-0 mt-0.5" />
               <p className="text-danger-400 text-sm">{error || authError}</p>
