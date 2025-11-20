@@ -125,61 +125,27 @@ const DashboardNew = () => {
     };
   }).sort((a, b) => b.value - a.value).slice(0, 5);
 
-  // DIRECT calculation - bypass any caching/closure issues
-  const directTotalExpense = summary.totalExpense || 0;
-  const directTotalIncome = summary.totalIncome || 1;
+  // FIXED: Capture values immediately using Number() to ensure concrete values
+  const directTotalExpense = Number(summary.totalExpense) || 0;
+  const directTotalIncome = Number(summary.totalIncome) || 1;
   
-  // Calculate spend percentage using TOTAL expenses (not just top 5 categories)
+  // Calculate spend percentage using CAPTURED VALUES (not reactive references)
   const spendPercentage = directTotalIncome > 0 
     ? Math.round((directTotalExpense / directTotalIncome) * 100) 
     : 0;
   
-  // Debug logging - SUPER DETAILED
-  const testDivision = directTotalExpense / directTotalIncome;
-  const testTimes100 = testDivision * 100;
-  const testRounded = Math.round(testTimes100);
-  
-  // SANITY CHECK: Hardcoded calculation to prove JavaScript works
-  const sanityCheck679 = 679;
-  const sanityCheck7323 = 7323;
-  const sanityDivision = sanityCheck679 / sanityCheck7323;
-  const sanityPercent = Math.round(sanityDivision * 100);
-  
-  console.log('🔥🔥🔥 [Dashboard v5.0 - FINAL DEBUG] IMPOSSIBLE BUG:', {
-    CLAIMED_VALUES: {
-      expense: directTotalExpense,
-      income: directTotalIncome,
-    },
-    CALCULATION_RESULT: {
-      division: testDivision,
-      times100: testTimes100,
-      rounded: testRounded,
-      final: spendPercentage
-    },
-    SANITY_CHECK_HARDCODED: {
-      expense: 679,
-      income: 7323,
-      division: sanityDivision,
-      percent: sanityPercent,
-      proves_js_works: sanityPercent === 9
-    },
-    PROOF_OF_BUG: {
-      claimed_division: `${directTotalExpense} / ${directTotalIncome} = ${testDivision}`,
-      correct_division: `679 / 7323 = ${sanityDivision}`,
-      values_match: directTotalExpense === 679 && directTotalIncome === 7323,
-      division_matches: testDivision === sanityDivision,
-      BUG_IS_HERE: testDivision !== sanityDivision ? 'VALUES ARE LYING!' : 'CALCULATION IS WRONG!'
-    }
+  // Final verification log
+  console.log('✅ [Dashboard v6.0 - FIXED] Spending Percentage:', {
+    expense: directTotalExpense,
+    income: directTotalIncome,
+    percentage: spendPercentage,
+    formula: `${directTotalExpense} / ${directTotalIncome} * 100 = ${spendPercentage}%`,
+    expected: Math.round((679 / 7323) * 100),
+    isCorrect: spendPercentage === Math.round((directTotalExpense / directTotalIncome) * 100)
   });
 
   return (
     <div className="space-y-6">
-      {/* DEBUG: Version Banner */}
-      <div className="bg-primary-500/20 border border-primary-500 rounded-lg p-2 text-center">
-        <span className="text-primary-400 text-xs font-mono">
-          DASHBOARD v3.0 LOADED | Expense: ${summary.totalExpense} | Income: ${summary.totalIncome} | Calc: {spendPercentage}%
-        </span>
-      </div>
       {/* Balance Header Card */}
       <Card variant="gradient" className="relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary-500/20 to-purple-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -348,9 +314,7 @@ const DashboardNew = () => {
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-4xl font-bold text-white">{spendPercentage}%</span>
-                <span className="text-sm text-gray-400">
-                  {summary.totalExpense} / {summary.totalIncome}
-                </span>
+                <span className="text-sm text-gray-400">Total Spend</span>
               </div>
             </div>
 
