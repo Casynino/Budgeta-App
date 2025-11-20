@@ -49,7 +49,7 @@ export const FinanceProvider = ({ children }) => {
   const [goals, setGoals] = useState([]);
   
   // Sync State
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncError, setSyncError] = useState(null);
   const [lastSyncTime, setLastSyncTime] = useState(null);
@@ -65,7 +65,8 @@ export const FinanceProvider = ({ children }) => {
   // Initialize data from backend (with localStorage fallback)
   useEffect(() => {
     const loadData = async () => {
-      setIsLoading(true);
+      // Don't block UI - load in background
+      setIsSyncing(true);
       setSyncError(null);
       
       try {
@@ -110,138 +111,20 @@ export const FinanceProvider = ({ children }) => {
             }
             
             setLastSyncTime(new Date().toISOString());
+            setIsSyncing(false);
           } else {
-            // Backend empty - check if localStorage has data to migrate
-            console.log('[FinanceContext] 📦 Backend empty, checking localStorage for migration...');
-            const savedAccounts = localStorage.getItem('budgeta_accounts');
-            const savedTransactions = localStorage.getItem('budgeta_transactions');
+            // Backend empty - use defaults immediately (skip migration for speed)
+            console.log('[FinanceContext] 📦 Backend empty, using defaults...');
+            setAccounts(DEFAULT_ACCOUNTS);
+            setTransactions([]);
             
-            if (savedAccounts || savedTransactions) {
-              // Migrate localStorage data to backend
-              console.log('[FinanceContext] 🔼 Migrating localStorage data to backend...');
-              const localAccounts = savedAccounts ? JSON.parse(savedAccounts) : DEFAULT_ACCOUNTS;
-              const localTransactions = savedTransactions ? JSON.parse(savedTransactions) : [];
-              
-              // Upload to backend
-              const migratedAccounts = [];
-              for (const account of localAccounts) {
-                try {
-                  // Map frontend account structure to backend structure
-                  const backendAccount = {
-                    name: account.name,
-                    type: account.type,
-                    icon: account.icon,
-                    color: account.color,
-                    currency: account.currency || 'USD',
-                    initialBalance: account.balance || account.initialBalance || 0,
-                    isDefault: account.isDefault || account.is_default || false
-                  };
-                  
-                  console.log('[FinanceContext] 🔄 Creating account on backend...', backendAccount.name);
-                  const created = await accountsAPI.create(backendAccount);
-                  console.log('[FinanceContext] ✅ Account created:', created.id);
-                  migratedAccounts.push(created);
-                } catch (err) {
-                  console.error('[FinanceContext] ❌ Failed to migrate account:', err);
-                  // Don't keep local version - skip failed accounts
-                }
-              }
-              
-              // Create account ID mapping (old ID → new ID)
-              const accountIdMap = {};
-              localAccounts.forEach((oldAccount, index) => {
-                if (migratedAccounts[index]) {
-                  accountIdMap[oldAccount.id] = migratedAccounts[index].id;
-                }
-              });
-              
-              console.log('[FinanceContext] 📋 Account ID mapping:', accountIdMap);
-              
-              const migratedTransactions = [];
-              for (const transaction of localTransactions) {
-                try {
-                  // Map old account ID to new backend account ID
-                  const newAccountId = accountIdMap[transaction.accountId] || migratedAccounts[0]?.id;
-                  
-                  if (!newAccountId) {
-                    console.warn('[FinanceContext] ⚠️ No account for transaction, skipping');
-                    continue;
-                  }
-                  
-                  const backendTransaction = {
-                    accountId: newAccountId,
-                    type: transaction.type,
-                    amount: transaction.amount,
-                    category: transaction.category,
-                    description: transaction.description || '',
-                    date: transaction.date
-                  };
-                  
-                  console.log('[FinanceContext] 🔄 Creating transaction on backend...');
-                  const created = await transactionsAPI.create(backendTransaction);
-                  console.log('[FinanceContext] ✅ Transaction created:', created.id);
-                  migratedTransactions.push(created);
-                } catch (err) {
-                  console.error('[FinanceContext] ❌ Failed to migrate transaction:', err);
-                  // Don't keep local version - skip failed transactions
-                }
-              }
-              
-              setAccounts(migratedAccounts);
-              setTransactions(migratedTransactions);
-              
-              // Update localStorage with migrated data (with backend IDs)
-              localStorage.setItem('budgeta_accounts', JSON.stringify(migratedAccounts));
-              localStorage.setItem('budgeta_transactions', JSON.stringify(migratedTransactions));
-              
-              if (migratedAccounts.length > 0) {
-                const defaultAcc = migratedAccounts.find(acc => acc.isDefault || acc.is_default) || migratedAccounts[0];
-                setSelectedAccount(defaultAcc.id);
-              }
-              
-              console.log('[FinanceContext] ✅ Migration complete:', {
-                accounts: migratedAccounts.length,
-                transactions: migratedTransactions.length
-              });
-              setLastSyncTime(new Date().toISOString());
-            } else {
-              // No data anywhere - create defaults on backend
-              console.log('[FinanceContext] 🆕 No data found, creating defaults on backend...');
-              const defaultAccounts = [];
-              
-              for (const account of DEFAULT_ACCOUNTS) {
-                try {
-                  const backendAccount = {
-                    name: account.name,
-                    type: account.type,
-                    icon: account.icon,
-                    color: account.color,
-                    currency: account.currency || 'USD',
-                    initialBalance: account.balance || 0,
-                    isDefault: account.isDefault || false
-                  };
-                  
-                  const created = await accountsAPI.create(backendAccount);
-                  defaultAccounts.push(created);
-                } catch (err) {
-                  console.error('[FinanceContext] ❌ Failed to create default account:', err);
-                }
-              }
-              
-              setAccounts(defaultAccounts);
-              setTransactions([]);
-              
-              // Cache to localStorage
-              localStorage.setItem('budgeta_accounts', JSON.stringify(defaultAccounts));
-              localStorage.setItem('budgeta_transactions', JSON.stringify([]));
-              
-              if (defaultAccounts.length > 0) {
-                const defaultAcc = defaultAccounts.find(acc => acc.isDefault || acc.is_default) || defaultAccounts[0];
-                setSelectedAccount(defaultAcc.id);
-              }
-              
-              setLastSyncTime(new Date().toISOString());
+            if (DEFAULT_ACCOUNTS.length > 0) {
+              const defaultAcc = DEFAULT_ACCOUNTS.find(acc => acc.isDefault) || DEFAULT_ACCOUNTS[0];
+              setSelectedAccount(defaultAcc.id);
             }
+            
+            setLastSyncTime(new Date().toISOString());
+            setIsSyncing(false);
           }
         } else {
           // No user - load from localStorage (offline mode)
@@ -257,6 +140,8 @@ export const FinanceProvider = ({ children }) => {
             const defaultAcc = loadedAccounts.find(acc => acc.isDefault) || loadedAccounts[0];
             setSelectedAccount(defaultAcc.id);
           }
+          
+          setIsSyncing(false);
         }
         
         // Load other data from localStorage (not synced to backend yet)
@@ -289,7 +174,7 @@ export const FinanceProvider = ({ children }) => {
         setAccounts(savedAccounts ? JSON.parse(savedAccounts) : DEFAULT_ACCOUNTS);
         setTransactions(savedTransactions ? JSON.parse(savedTransactions) : []);
       } finally {
-        setIsLoading(false);
+        setIsSyncing(false);
       }
     };
 
