@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   TrendingUp, 
@@ -25,6 +25,23 @@ import { useAuth } from '../../context/AuthContext';
 const Welcome = () => {
   const navigate = useNavigate();
   const { currentUser, loading } = useAuth();
+  const [animationKey, setAnimationKey] = useState(0);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  // Detect reduced motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    
+    const handleChange = (e) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  // Trigger animation on mount
+  useEffect(() => {
+    setAnimationKey(prev => prev + 1);
+  }, []);
 
   const features = [
     {
@@ -361,10 +378,23 @@ const Welcome = () => {
 
         <div className="container mx-auto relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            {/* Fun Gen Z Header */}
-            <div className="mb-8 opacity-0 animate-[fadeIn_1s_ease-in_forwards]">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-dark-800/30 border border-primary-500/20 rounded-full backdrop-blur-sm">
-                <Sparkles className="w-3 h-3 text-primary-400 animate-pulse" />
+            {/* Fun Gen Z Header - Powered By The Best */}
+            <div 
+              key={`powered-${animationKey}`}
+              className={`mb-8 transition-all duration-1000 ${
+                prefersReducedMotion 
+                  ? 'opacity-100' 
+                  : 'opacity-0 animate-[fadeIn_1s_ease-in_forwards]'
+              }`}
+              role="banner"
+              aria-label="Powered by Haolabs"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-dark-800/30 border border-primary-500/20 rounded-full backdrop-blur-sm hover:scale-105 transition-transform">
+                <Sparkles 
+                  className={`w-3 h-3 text-primary-400 ${
+                    prefersReducedMotion ? '' : 'animate-pulse'
+                  }`} 
+                />
                 <span className="text-xs font-bold text-transparent bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text">
                   Powered By The Best ✨
                 </span>
@@ -374,12 +404,33 @@ const Welcome = () => {
             {/* Haolabs with Typing Effect */}
             <div className="relative inline-block">
               {/* Animated Glow */}
-              <div className="absolute -inset-6 bg-gradient-to-r from-primary-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl opacity-0 animate-[glow_2s_ease-in-out_0.5s_infinite]" />
+              <div 
+                className={`absolute -inset-6 bg-gradient-to-r from-primary-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl ${
+                  prefersReducedMotion 
+                    ? 'opacity-30' 
+                    : 'opacity-0 animate-[glow_2s_ease-in-out_0.5s_infinite]'
+                }`}
+                aria-hidden="true"
+              />
               
               {/* Main Text */}
               <div className="relative">
-                <h3 className="text-4xl md:text-5xl font-black tracking-tight opacity-0 animate-[fadeIn_1s_ease-in_0.3s_forwards]">
-                  <span className="inline-block overflow-hidden border-r-2 border-primary-400 pr-1 animate-[typing_1.8s_steps(7)_0.5s_forwards,blink_0.75s_step-end_2.3s_infinite]" style={{ width: 0, whiteSpace: 'nowrap' }}>
+                <h3 
+                  key={`haolabs-${animationKey}`}
+                  className={`text-4xl md:text-5xl font-black tracking-tight ${
+                    prefersReducedMotion 
+                      ? 'opacity-100' 
+                      : 'opacity-0 animate-[fadeIn_1s_ease-in_0.3s_forwards]'
+                  }`}
+                >
+                  <span 
+                    className={`inline-block overflow-hidden border-r-2 border-primary-400 pr-1 ${
+                      prefersReducedMotion 
+                        ? 'border-r-0' 
+                        : 'animate-[typing_1.8s_steps(7)_0.5s_forwards,blink_0.75s_step-end_2.3s_infinite]'
+                    }`}
+                    style={prefersReducedMotion ? { width: 'auto' } : { width: 0, whiteSpace: 'nowrap' }}
+                  >
                     <span className="bg-gradient-to-r from-primary-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                       Haolabs
                     </span>
@@ -387,7 +438,14 @@ const Welcome = () => {
                 </h3>
                 
                 {/* Minimal Tagline */}
-                <p className="text-xs text-gray-500 mt-3 font-medium opacity-0 animate-[fadeIn_1s_ease-in_2.5s_forwards]">
+                <p 
+                  key={`tagline-${animationKey}`}
+                  className={`text-xs text-gray-500 mt-3 font-medium ${
+                    prefersReducedMotion 
+                      ? 'opacity-100' 
+                      : 'opacity-0 animate-[fadeIn_1s_ease-in_2.5s_forwards]'
+                  }`}
+                >
                   Building Tomorrow, Today 🚀
                 </p>
               </div>
