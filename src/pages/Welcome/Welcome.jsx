@@ -151,14 +151,16 @@ const Welcome = () => {
 
         <div className="container mx-auto relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            {/* Main Heading */}
-            <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight opacity-0 animate-[fadeIn_1s_ease-out_forwards]">
-              Your <span className="text-transparent bg-gradient-to-r from-primary-400 to-cyan-400 bg-clip-text">Money</span>, Your <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">Rules</span>
+            {/* Main Heading with Typing Animation */}
+            <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+              <span className="inline-block overflow-hidden border-r-2 border-white animate-[typing_3s_steps(22)_forwards,blink_0.75s_step-end_3s_infinite]" style={{ maxWidth: '0ch', whiteSpace: 'nowrap' }}>
+                Spend <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text">Smart</span>, Live <span className="text-transparent bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text">Better</span>
+              </span>
             </h2>
 
             {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed opacity-0 animate-[fadeIn_1s_ease-out_0.3s_forwards]">
-              See it all, control it all, and <span className="text-white font-semibold">level up</span> your financial game with powerful <span className="text-primary-400 font-semibold">analytics</span>.
+            <p className="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed opacity-0 animate-[fadeIn_1s_ease-out_3s_forwards]">
+              Understand your <span className="text-white font-semibold">spending</span>, master your <span className="text-primary-400 font-semibold">money</span>, and unlock <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text font-semibold">financial freedom</span>.
             </p>
 
             {/* CTA Buttons */}
@@ -430,10 +432,10 @@ const Welcome = () => {
 
           @keyframes typing {
             from {
-              width: 0;
+              max-width: 0ch;
             }
             to {
-              width: 100%;
+              max-width: 22ch;
             }
           }
 
@@ -442,7 +444,7 @@ const Welcome = () => {
               border-color: transparent;
             }
             50% {
-              border-color: rgb(96, 165, 250);
+              border-color: white;
             }
           }
 
