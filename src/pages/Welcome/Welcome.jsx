@@ -355,72 +355,42 @@ const Welcome = () => {
         </div>
       </section>
 
-      {/* Tech Partner Section - Haolands */}
+      {/* Partner Section - Haolabs */}
       <section className="py-16 px-4 bg-dark-900 relative overflow-hidden">
-        {/* Tech Grid Background */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px)',
-            backgroundSize: '50px 50px'
-          }} />
-        </div>
-
         {/* Subtle Glow Effect */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-primary-500/10 via-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse" />
 
         <div className="container mx-auto relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            {/* Header */}
+            {/* Fun Gen Z Header */}
             <div className="mb-8 opacity-0 animate-[fadeIn_1s_ease-in_forwards]">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-dark-800/50 border border-primary-500/20 rounded-full backdrop-blur-sm">
-                <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" />
-                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Our Technology Partner
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-dark-800/30 border border-primary-500/20 rounded-full backdrop-blur-sm">
+                <Sparkles className="w-3 h-3 text-primary-400 animate-pulse" />
+                <span className="text-xs font-bold text-transparent bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text">
+                  Powered By The Best ✨
                 </span>
-                <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" />
               </div>
             </div>
 
-            {/* Haolands with Typing Effect */}
+            {/* Haolabs with Typing Effect */}
             <div className="relative inline-block">
-              {/* Glow container */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-primary-500/20 via-purple-500/20 to-cyan-500/20 rounded-2xl blur-xl opacity-0 animate-[glow_2s_ease-in-out_0.5s_infinite]" />
+              {/* Animated Glow */}
+              <div className="absolute -inset-6 bg-gradient-to-r from-primary-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl opacity-0 animate-[glow_2s_ease-in-out_0.5s_infinite]" />
               
               {/* Main Text */}
               <div className="relative">
-                <h3 className="text-4xl md:text-5xl font-bold tracking-tight opacity-0 animate-[fadeIn_1s_ease-in_0.3s_forwards]">
-                  <span className="inline-block overflow-hidden border-r-2 border-primary-400 pr-1 animate-[typing_2s_steps(8)_0.5s_forwards,blink_0.75s_step-end_2.5s_infinite]" style={{ width: 0, whiteSpace: 'nowrap' }}>
-                    <span className="bg-gradient-to-r from-primary-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                      Haolands
+                <h3 className="text-4xl md:text-5xl font-black tracking-tight opacity-0 animate-[fadeIn_1s_ease-in_0.3s_forwards]">
+                  <span className="inline-block overflow-hidden border-r-2 border-primary-400 pr-1 animate-[typing_1.8s_steps(7)_0.5s_forwards,blink_0.75s_step-end_2.3s_infinite]" style={{ width: 0, whiteSpace: 'nowrap' }}>
+                    <span className="bg-gradient-to-r from-primary-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      Haolabs
                     </span>
                   </span>
                 </h3>
                 
-                {/* Tech Subtitle */}
-                <p className="text-sm text-gray-500 mt-3 font-mono opacity-0 animate-[fadeIn_1s_ease-in_2.7s_forwards]">
-                  {'<'} Advanced Technology Solutions {'/>'} 
+                {/* Minimal Tagline */}
+                <p className="text-xs text-gray-500 mt-3 font-medium opacity-0 animate-[fadeIn_1s_ease-in_2.5s_forwards]">
+                  Building Tomorrow, Today 🚀
                 </p>
-              </div>
-
-              {/* Tech Accent Elements */}
-              <div className="absolute -left-8 top-1/2 -translate-y-1/2 opacity-0 animate-[fadeIn_1s_ease-in_2.5s_forwards]">
-                <div className="w-1 h-12 bg-gradient-to-b from-primary-500 to-transparent rounded-full" />
-              </div>
-              <div className="absolute -right-8 top-1/2 -translate-y-1/2 opacity-0 animate-[fadeIn_1s_ease-in_2.5s_forwards]">
-                <div className="w-1 h-12 bg-gradient-to-b from-cyan-500 to-transparent rounded-full" />
-              </div>
-            </div>
-
-            {/* Tech Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-3 mt-8 opacity-0 animate-[fadeIn_1s_ease-in_2.9s_forwards]">
-              <div className="px-3 py-1 bg-primary-500/10 border border-primary-500/30 rounded-md">
-                <span className="text-xs text-primary-400 font-mono">AI-Powered</span>
-              </div>
-              <div className="px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-md">
-                <span className="text-xs text-purple-400 font-mono">Secure</span>
-              </div>
-              <div className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-md">
-                <span className="text-xs text-cyan-400 font-mono">Scalable</span>
               </div>
             </div>
           </div>
@@ -462,7 +432,7 @@ const Welcome = () => {
               opacity: 0;
             }
             50% {
-              opacity: 0.4;
+              opacity: 0.5;
             }
           }
         `}</style>
