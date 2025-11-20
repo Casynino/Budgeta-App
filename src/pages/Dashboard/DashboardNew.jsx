@@ -131,16 +131,18 @@ const DashboardNew = () => {
     : 0;
   
   // Debug logging - DETAILED
-  console.log('🔥 [Dashboard v3.0 - DETAILED DEBUG] Spending Calculation:', {
-    totalIncome: summary.totalIncome,
-    totalExpense: summary.totalExpense,
+  console.log('🔥 [Dashboard v3.0 - TYPE CHECK] Values:', {
+    totalIncomeType: typeof summary.totalIncome,
+    totalIncomeValue: summary.totalIncome,
+    totalExpenseType: typeof summary.totalExpense,
+    totalExpenseValue: summary.totalExpense,
+    rawDivision: summary.totalExpense / summary.totalIncome,
+    times100: (summary.totalExpense / summary.totalIncome) * 100,
+    mathRounded: Math.round((summary.totalExpense / summary.totalIncome) * 100),
     spendPercentage: spendPercentage,
     manualCalc: (summary.totalExpense / summary.totalIncome * 100).toFixed(2),
     formula: `${summary.totalExpense} / ${summary.totalIncome} * 100 = ${spendPercentage}%`,
-    expenseChartDataLength: expenseChartData.length,
-    expenseChartDataTotal: expenseChartData.reduce((sum, item) => sum + item.value, 0),
-    expensesByCategory: summary.expensesByCategory,
-    timestamp: new Date().toISOString()
+    summaryObject: summary
   });
 
   return (
