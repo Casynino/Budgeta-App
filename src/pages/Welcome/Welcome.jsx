@@ -355,80 +355,92 @@ const Welcome = () => {
         </div>
       </section>
 
-      {/* Partners & Sponsors Section */}
-      <section className="py-16 px-4 bg-dark-900">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-2">
-              Trusted By
+      {/* Premium Partner Showcase - HAO-LABS */}
+      <section className="py-20 px-4 bg-dark-900 relative overflow-hidden">
+        {/* Animated Background Effects */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-primary-500/20 via-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s', animationDuration: '3s' }} />
+          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s', animationDuration: '4s' }} />
+        </div>
+
+        <div className="container mx-auto relative z-10">
+          <div className="text-center mb-8">
+            <p className="text-sm text-primary-400 uppercase tracking-widest font-bold mb-3 animate-pulse">
+              ✨ Proudly Partnered With
             </p>
-            <h3 className="text-2xl md:text-3xl font-bold text-white">
-              Our Partners & <span className="bg-gradient-to-r from-primary-500 to-purple-500 bg-clip-text text-transparent">Sponsors</span>
-            </h3>
           </div>
           
-          <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
-              {/* Ripple Network */}
-              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
-                <div className="text-gray-400 group-hover:text-white transition-colors duration-300">
-                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
-                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">Ripple</text>
-                  </svg>
-                </div>
-              </div>
+          <div className="max-w-2xl mx-auto">
+            {/* HAO-LABS Spotlight Container */}
+            <div className="relative group">
+              {/* Glow Effect Container */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 rounded-2xl blur-2xl opacity-30 group-hover:opacity-60 transition-all duration-500 animate-pulse" />
+              
+              {/* Main Card */}
+              <div className="relative bg-gradient-to-br from-dark-800 via-dark-900 to-dark-800 rounded-2xl p-12 border-2 border-primary-500/30 group-hover:border-primary-500/60 transition-all duration-500 shadow-2xl">
+                {/* Animated Shine Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl" />
+                
+                {/* Content */}
+                <div className="relative text-center">
+                  {/* Premium Badge */}
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-500/20 to-purple-500/20 border border-primary-500/50 rounded-full mb-6">
+                    <Sparkles className="w-4 h-4 text-primary-400 animate-pulse" />
+                    <span className="text-xs font-bold text-primary-400 uppercase tracking-wider">Premium Partner</span>
+                    <Sparkles className="w-4 h-4 text-primary-400 animate-pulse" />
+                  </div>
 
-              {/* Stripe */}
-              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
-                <div className="text-gray-400 group-hover:text-primary-400 transition-colors duration-300">
-                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
-                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">Stripe</text>
-                  </svg>
-                </div>
-              </div>
+                  {/* HAO-LABS Logo with Animations */}
+                  <div className="mb-6 transform group-hover:scale-110 transition-all duration-500">
+                    <h2 className="text-6xl md:text-7xl font-black tracking-tight">
+                      <span className="bg-gradient-to-r from-primary-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse" style={{ animationDuration: '2s' }}>
+                        HAO
+                      </span>
+                      <span className="text-white">-</span>
+                      <span className="bg-gradient-to-r from-pink-400 via-purple-400 to-primary-400 bg-clip-text text-transparent animate-pulse" style={{ animationDuration: '2s', animationDelay: '0.5s' }}>
+                        LABS
+                      </span>
+                    </h2>
+                  </div>
 
-              {/* Plaid */}
-              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
-                <div className="text-gray-400 group-hover:text-cyan-400 transition-colors duration-300">
-                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
-                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">Plaid</text>
-                  </svg>
-                </div>
-              </div>
+                  {/* Tagline */}
+                  <p className="text-xl text-gray-300 mb-8 font-light">
+                    Powering Innovation in <span className="text-primary-400 font-semibold">Financial Technology</span>
+                  </p>
 
-              {/* Visa */}
-              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
-                <div className="text-gray-400 group-hover:text-blue-400 transition-colors duration-300">
-                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
-                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">VISA</text>
-                  </svg>
-                </div>
-              </div>
+                  {/* Feature Highlights */}
+                  <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-dark-800/50 rounded-lg border border-primary-500/20">
+                      <Shield className="w-4 h-4 text-primary-400" />
+                      <span className="text-gray-300">Enterprise Security</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-dark-800/50 rounded-lg border border-purple-500/20">
+                      <Zap className="w-4 h-4 text-purple-400" />
+                      <span className="text-gray-300">Cutting-Edge Tech</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-dark-800/50 rounded-lg border border-pink-500/20">
+                      <Sparkles className="w-4 h-4 text-pink-400" />
+                      <span className="text-gray-300">Innovation Leaders</span>
+                    </div>
+                  </div>
 
-              {/* Mastercard */}
-              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
-                <div className="text-gray-400 group-hover:text-orange-400 transition-colors duration-300">
-                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
-                    <text x="5" y="28" fontFamily="Arial, sans-serif" fontSize="14" fontWeight="bold">Mastercard</text>
-                  </svg>
-                </div>
-              </div>
-
-              {/* PayPal */}
-              <div className="group flex items-center justify-center p-4 rounded-lg hover:bg-dark-800/50 transition-all duration-300">
-                <div className="text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
-                  <svg className="w-20 h-12" viewBox="0 0 120 40" fill="currentColor">
-                    <text x="10" y="28" fontFamily="Arial, sans-serif" fontSize="18" fontWeight="bold">PayPal</text>
-                  </svg>
+                  {/* Floating Icons Animation */}
+                  <div className="absolute -top-6 -right-6 animate-bounce" style={{ animationDuration: '3s' }}>
+                    <Sparkles className="w-8 h-8 text-primary-400 opacity-50" />
+                  </div>
+                  <div className="absolute -bottom-6 -left-6 animate-bounce" style={{ animationDuration: '3s', animationDelay: '1.5s' }}>
+                    <Sparkles className="w-8 h-8 text-purple-400 opacity-50" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Trust indicator */}
+          {/* Trust Message */}
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-500">
-              Secured partnerships ensuring <span className="text-primary-400 font-semibold">your financial safety</span>
+              Together we're building the <span className="text-primary-400 font-semibold">future of finance</span>
             </p>
           </div>
         </div>
