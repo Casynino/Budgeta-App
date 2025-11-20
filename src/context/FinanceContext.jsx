@@ -72,27 +72,14 @@ export const FinanceProvider = ({ children }) => {
       try {
         if (user) {
           // User logged in - fetch from backend
-          console.log('[FinanceContext] 🔄 Fetching data from backend...');
-          
           const [accountsData, transactionsData] = await Promise.all([
             accountsAPI.getAll().catch(() => []),
             transactionsAPI.getAll().catch(() => [])
           ]);
           
-          console.log('[FinanceContext] ✅ Backend data loaded:', {
-            accounts: accountsData.length,
-            transactions: transactionsData.length
-          });
-          
           // Transform backend data to frontend format (snake_case → camelCase)
           const transformedAccounts = accountsData.map(transformAccount);
           const transformedTransactions = transactionsData.map(transformTransaction);
-          
-          console.log('[FinanceContext] 🔄 Transformed data:', {
-            accounts: transformedAccounts.length,
-            transactions: transformedTransactions.length,
-            sampleTransaction: transformedTransactions[0]
-          });
           
           // If backend has data, use it
           if (transformedAccounts.length > 0 || transformedTransactions.length > 0) {
@@ -114,7 +101,6 @@ export const FinanceProvider = ({ children }) => {
             setIsSyncing(false);
           } else {
             // Backend empty - use defaults immediately (skip migration for speed)
-            console.log('[FinanceContext] 📦 Backend empty, using defaults...');
             setAccounts(DEFAULT_ACCOUNTS);
             setTransactions([]);
             
@@ -128,7 +114,6 @@ export const FinanceProvider = ({ children }) => {
           }
         } else {
           // No user - load from localStorage (offline mode)
-          console.log('[FinanceContext] 💾 No user, loading from localStorage...');
           const savedAccounts = localStorage.getItem('budgeta_accounts');
           const savedTransactions = localStorage.getItem('budgeta_transactions');
           
@@ -229,12 +214,10 @@ export const FinanceProvider = ({ children }) => {
       
       if (user) {
         // Sync to backend
-        console.log('[FinanceContext] 🔄 Creating transaction on backend...');
         const created = await transactionsAPI.create({
           ...transaction,
           date: transaction.date || new Date().toISOString(),
         });
-        console.log('[FinanceContext] ✅ Transaction created:', created.id);
         const transformedTransaction = transformTransaction(created);
         setTransactions([transformedTransaction, ...transactions]);
         setLastSyncTime(new Date().toISOString());
@@ -268,9 +251,7 @@ export const FinanceProvider = ({ children }) => {
       
       if (user) {
         // Sync to backend
-        console.log('[FinanceContext] 🔄 Updating transaction on backend...');
         const updated = await transactionsAPI.update(id, updatedTransaction);
-        console.log('[FinanceContext] ✅ Transaction updated:', id);
         const transformedTransaction = transformTransaction(updated);
         setTransactions(transactions.map(t => t.id === id ? transformedTransaction : t));
         setLastSyncTime(new Date().toISOString());
@@ -294,9 +275,7 @@ export const FinanceProvider = ({ children }) => {
       
       if (user) {
         // Sync to backend
-        console.log('[FinanceContext] 🔄 Deleting transaction from backend...');
         await transactionsAPI.delete(id);
-        console.log('[FinanceContext] ✅ Transaction deleted:', id);
         setLastSyncTime(new Date().toISOString());
       }
       
@@ -319,13 +298,11 @@ export const FinanceProvider = ({ children }) => {
       
       if (user) {
         // Sync to backend
-        console.log('[FinanceContext] 🔄 Creating account on backend...');
         const created = await accountsAPI.create({
           ...account,
           initialBalance: account.balance || account.initialBalance || 0,
           createdAt: new Date().toISOString(),
         });
-        console.log('[FinanceContext] ✅ Account created:', created.id);
         const transformedAccount = transformAccount(created);
         setAccounts([...accounts, transformedAccount]);
         setLastSyncTime(new Date().toISOString());
@@ -364,9 +341,7 @@ export const FinanceProvider = ({ children }) => {
       
       if (user) {
         // Sync to backend
-        console.log('[FinanceContext] 🔄 Updating account on backend...');
         const updated = await accountsAPI.update(id, updatedAccount);
-        console.log('[FinanceContext] ✅ Account updated:', id);
         const transformedAccount = transformAccount(updated);
         setAccounts(accounts.map(a => a.id === id ? transformedAccount : a));
         setLastSyncTime(new Date().toISOString());
@@ -401,9 +376,7 @@ export const FinanceProvider = ({ children }) => {
       
       if (user) {
         // Sync to backend
-        console.log('[FinanceContext] 🔄 Deleting account from backend...');
         await accountsAPI.delete(id);
-        console.log('[FinanceContext] ✅ Account deleted:', id);
         setLastSyncTime(new Date().toISOString());
       }
       

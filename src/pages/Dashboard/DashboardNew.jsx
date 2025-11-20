@@ -125,22 +125,10 @@ const DashboardNew = () => {
     };
   }).sort((a, b) => b.value - a.value).slice(0, 5);
 
-  // FIXED: Use ALL-TIME values (same as sidebar cards) for percentage calculation
-  // The sidebar shows "Total Income: $7,327" (all-time) and "Total Expenses: $679" (all-time)
-  // So the percentage MUST use all-time values too!
+  // Calculate spending percentage using all-time values
   const spendPercentage = allTimeIncome > 0
     ? Math.round((allTimeExpenses / allTimeIncome) * 100)
     : 0;
-  
-  console.log(`✅✅✅ [Dashboard v8.0 - FIXED] Using ALL-TIME values:`, {
-    allTimeIncome: allTimeIncome,
-    allTimeExpenses: allTimeExpenses,
-    percentage: spendPercentage,
-    calculation: `Math.round((${allTimeExpenses} / ${allTimeIncome}) * 100) = ${spendPercentage}%`,
-    monthlyIncome: summary.totalIncome,
-    monthlyExpense: summary.totalExpense,
-    note: 'Now matches sidebar values!'
-  });
 
   return (
     <div className="space-y-6">

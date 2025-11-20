@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }) => {
           const user = JSON.parse(userData);
           // Trust localStorage immediately - no API verification (too slow)
           setCurrentUser(user);
-          console.log('[AuthContext] ✅ User loaded from localStorage (instant)');
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
@@ -95,7 +94,6 @@ export const AuthProvider = ({ children }) => {
   // Login user with API
   const login = async (email, password) => {
     try {
-      console.log('[AuthContext] 🔐 Starting login process...');
       setError(null);
       setLoading(true);
 
@@ -104,20 +102,15 @@ export const AuthProvider = ({ children }) => {
         throw new Error('Email and password are required');
       }
 
-      console.log('[AuthContext] 📡 Calling API login...');
       // Call API to login
       const response = await authAPI.login(email, password);
-      console.log('[AuthContext] ✅ API login successful:', response);
 
       // Save session
-      console.log('[AuthContext] 💾 Saving session to localStorage...');
       localStorage.setItem('budgeta_auth_token', response.token);
       localStorage.setItem('budgeta_user_data', JSON.stringify(response.user));
-      console.log('[AuthContext] ✅ Session saved');
 
       setCurrentUser(response.user);
       setLoading(false);
-      console.log('[AuthContext] ✅ Login complete!');
       return { success: true, user: response.user };
     } catch (error) {
       console.error('[AuthContext] ❌ Login failed:', error);
@@ -184,9 +177,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error('Password must contain at least one number');
       }
 
-      // In production, call API to change password
-      console.log('Password change requested - would call API');
-
       return { success: true };
     } catch (error) {
       setError(error.message);
@@ -200,8 +190,6 @@ export const AuthProvider = ({ children }) => {
       setError(null);
 
       // In production, call API to send password reset email
-      console.log('Password reset requested for:', email);
-      
       return { 
         success: true, 
         message: 'If an account exists, a reset link has been sent to your email' 

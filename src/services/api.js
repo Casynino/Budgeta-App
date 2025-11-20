@@ -7,21 +7,14 @@ const getApiUrl = () => {
   
   if (isProduction) {
     // PRODUCTION: Always use Render backend
-    console.log('[API] 🌍 Production mode detected');
     return 'https://budgeta-app-vaxu.onrender.com/api';
   } else {
     // DEVELOPMENT: Use local backend
-    console.log('[API] 💻 Development mode detected');
     return 'http://localhost:5001/api';
   }
 };
 
 const API_URL = getApiUrl();
-
-// Debug: Log the API URL being used
-console.log('[API] ✅ Using API_URL:', API_URL);
-console.log('[API] 📍 Hostname:', window.location.hostname);
-console.log('[API] 🔧 Environment:', import.meta.env.MODE);
 
 // Helper function to get auth token
 const getAuthToken = () => {
@@ -43,7 +36,6 @@ const authFetch = async (url, options = {}) => {
   }
 
   const fullUrl = `${API_URL}${url}`;
-  console.log(`[API] ${options.method || 'GET'} ${fullUrl}`);
 
   // Add timeout to prevent infinite loading (60 seconds for cold start)
   const controller = new AbortController();
@@ -61,28 +53,20 @@ const authFetch = async (url, options = {}) => {
 
     clearTimeout(timeoutId);
 
-    console.log(`[API] Response status: ${response.status}`);
-    console.log(`[API] Response OK:`, response.ok);
-
     if (!response.ok) {
       let errorMessage = 'Request failed';
       try {
         const error = await response.json();
-        console.error('[API] Error response:', error);
         errorMessage = error.error || error.message || errorMessage;
       } catch (e) {
-        console.error('[API] Failed to parse error response:', e);
         errorMessage = `HTTP ${response.status}: ${response.statusText}`;
       }
-      console.error('[API] Throwing error:', errorMessage);
       throw new Error(errorMessage);
     }
 
     return response.json();
   } catch (error) {
     clearTimeout(timeoutId);
-    console.error('[API] Fetch error:', error);
-    console.error('[API] Attempted URL:', fullUrl);
     
     // Handle abort/timeout
     if (error.name === 'AbortError') {
