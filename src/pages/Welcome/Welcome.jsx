@@ -170,7 +170,7 @@ const Welcome = () => {
           <div className="max-w-4xl mx-auto text-center">
             {/* Main Heading with Typing Animation */}
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-8 leading-tight px-4">
-              <span className="inline-block overflow-hidden border-r-2 border-white animate-[typing_3s_steps(22)_forwards,blink_0.75s_step-end_3s_infinite]" style={{ maxWidth: '0ch', whiteSpace: 'nowrap' }}>
+              <span className="inline-block overflow-hidden border-r-2 border-white animate-[typing_3s_steps(24)_forwards,blink_0.75s_step-end_3s_infinite]" style={{ maxWidth: '0ch', whiteSpace: 'nowrap' }}>
                 Spend <span className="text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text">Smart</span>, Live <span className="text-transparent bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text">Better</span>
               </span>
             </h2>
@@ -493,7 +493,7 @@ const Welcome = () => {
               max-width: 0ch;
             }
             to {
-              max-width: 8ch;
+              max-width: 30ch;
             }
           }
 
