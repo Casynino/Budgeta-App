@@ -130,12 +130,16 @@ const DashboardNew = () => {
     ? Math.round((summary.totalExpense / summary.totalIncome) * 100) 
     : 0;
   
-  // Debug logging
-  console.log('🔥 [Dashboard v2.0 - FIXED] Spending Calculation:', {
+  // Debug logging - DETAILED
+  console.log('🔥 [Dashboard v3.0 - DETAILED DEBUG] Spending Calculation:', {
     totalIncome: summary.totalIncome,
     totalExpense: summary.totalExpense,
     spendPercentage: spendPercentage,
+    manualCalc: (summary.totalExpense / summary.totalIncome * 100).toFixed(2),
     formula: `${summary.totalExpense} / ${summary.totalIncome} * 100 = ${spendPercentage}%`,
+    expenseChartDataLength: expenseChartData.length,
+    expenseChartDataTotal: expenseChartData.reduce((sum, item) => sum + item.value, 0),
+    expensesByCategory: summary.expensesByCategory,
     timestamp: new Date().toISOString()
   });
 
