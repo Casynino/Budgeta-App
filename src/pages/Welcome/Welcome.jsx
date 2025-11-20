@@ -427,12 +427,12 @@ const Welcome = () => {
                     className={`inline-block overflow-hidden border-r-2 border-primary-400 pr-1 ${
                       prefersReducedMotion 
                         ? 'border-r-0' 
-                        : 'animate-[typing_1.8s_steps(7)_0.5s_forwards,blink_0.75s_step-end_2.3s_infinite]'
+                        : 'animate-[typing_1.8s_steps(8)_0.5s_forwards,blink_0.75s_step-end_2.3s_infinite]'
                     }`}
                     style={prefersReducedMotion ? { maxWidth: 'none' } : { maxWidth: 0, whiteSpace: 'nowrap' }}
                   >
                     <span className="bg-gradient-to-r from-primary-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                      Haolabs
+                      hǎo-labs
                     </span>
                   </span>
                 </h3>
