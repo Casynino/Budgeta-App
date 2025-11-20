@@ -125,23 +125,23 @@ const DashboardNew = () => {
     };
   }).sort((a, b) => b.value - a.value).slice(0, 5);
 
-  // FIXED: Capture values immediately using Number() to ensure concrete values
-  const directTotalExpense = Number(summary.totalExpense) || 0;
-  const directTotalIncome = Number(summary.totalIncome) || 1;
+  // NUCLEAR OPTION: Calculate percentage directly from displayed values
+  // Using the EXACT same values shown in the cards
+  const cardTotalIncome = summary.totalIncome;
+  const cardTotalExpense = summary.totalExpense;
   
-  // Calculate spend percentage using CAPTURED VALUES (not reactive references)
-  const spendPercentage = directTotalIncome > 0 
-    ? Math.round((directTotalExpense / directTotalIncome) * 100) 
+  // Simple, direct calculation - no tricks
+  const spendPercentage = cardTotalIncome > 0
+    ? Math.round((cardTotalExpense / cardTotalIncome) * 100)
     : 0;
   
-  // Final verification log
-  console.log('✅ [Dashboard v6.0 - FIXED] Spending Percentage:', {
-    expense: directTotalExpense,
-    income: directTotalIncome,
+  console.log(`🚀🚀🚀 [Dashboard v7.0 - ${new Date().toISOString()}] DIRECT CALCULATION:`, {
+    income: cardTotalIncome,
+    expense: cardTotalExpense,
     percentage: spendPercentage,
-    formula: `${directTotalExpense} / ${directTotalIncome} * 100 = ${spendPercentage}%`,
-    expected: Math.round((679 / 7323) * 100),
-    isCorrect: spendPercentage === Math.round((directTotalExpense / directTotalIncome) * 100)
+    calculation: `Math.round((${cardTotalExpense} / ${cardTotalIncome}) * 100) = ${spendPercentage}%`,
+    rawCalc: (cardTotalExpense / cardTotalIncome),
+    times100: (cardTotalExpense / cardTotalIncome) * 100
   });
 
   return (

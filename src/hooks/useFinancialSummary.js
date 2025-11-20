@@ -16,19 +16,13 @@ export const useFinancialSummary = () => {
     });
 
     // Calculate totals
-    const incomeTransactions = monthTransactions.filter(t => t.type === 'income');
-    const expenseTransactions = monthTransactions.filter(t => t.type === 'expense');
-    
-    const totalIncome = incomeTransactions.reduce((sum, t) => sum + t.amount, 0);
-    const totalExpense = expenseTransactions.reduce((sum, t) => sum + t.amount, 0);
-    
-    // Debug logging
-    console.log('💰 [useFinancialSummary] Expense Calculation:', {
-      expenseCount: expenseTransactions.length,
-      expenseTransactions: expenseTransactions,
-      totalExpense: totalExpense,
-      expenseAmounts: expenseTransactions.map(t => ({ category: t.category, amount: t.amount, type: typeof t.amount }))
-    });
+    const totalIncome = monthTransactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const totalExpense = monthTransactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + t.amount, 0);
 
     const netSavings = totalIncome - totalExpense;
     const savingsRate = totalIncome > 0 ? (netSavings / totalIncome) * 100 : 0;
