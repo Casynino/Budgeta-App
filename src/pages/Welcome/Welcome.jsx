@@ -9,6 +9,7 @@ import {
   BarChart3,
   Wallet,
   ArrowRight,
+  CheckCircle2,
   Sparkles,
   Lock,
   Zap,
@@ -60,6 +61,12 @@ const Welcome = () => {
     },
   ];
 
+  const benefits = [
+    'No credit card required',
+    'Free to get started',
+    '7-day session security',
+    'No hidden fees',
+  ];
 
   const stats = [
     { number: '10k+', label: 'Secure Sessions' },
@@ -163,6 +170,15 @@ const Welcome = () => {
               )}
             </div>
 
+            {/* Benefits List */}
+            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
+              {benefits.map((benefit, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                  <span>{benefit}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Hero Image/Dashboard Preview */}
