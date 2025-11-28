@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Plus, AlertCircle, CheckCircle, TrendingUp } from 'lucide-react';
-import Card from '../../components/common/Card';
+import { AlertCircle, CheckCircle, Plus, TrendingUp } from 'lucide-react';
+import { useState } from 'react';
 import Button from '../../components/common/Button';
+import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Modal from '../../components/common/Modal';
-import Select from '../../components/common/Select';
 import ProgressBar from '../../components/common/ProgressBar';
-import { useFinance } from '../../context/FinanceContext';
+import Select from '../../components/common/Select';
 import { BUDGET_CATEGORIES } from '../../constants/categories';
-import { formatCurrency, calculatePercentage } from '../../utils/helpers';
+import { useFinance } from '../../context/FinanceContext';
 import { useFinancialSummary } from '../../hooks/useFinancialSummary';
+import { calculatePercentage, formatCurrency } from '../../utils/helpers';
 
 const Budget = () => {
-  const { budgets, addBudget, updateBudget, deleteBudget, selectedMonth, selectedYear } = useFinance();
+  const { budgets, addBudget, updateBudget, deleteBudget, selectedMonth, selectedYear, baseCurrency, displayCurrency } = useFinance();
   const summary = useFinancialSummary();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBudget, setEditingBudget] = useState(null);
@@ -53,7 +53,7 @@ const Budget = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const budgetData = {
       ...formData,
       limit: parseFloat(formData.limit),
@@ -67,11 +67,11 @@ const Budget = () => {
       // Calculate spent amount from transactions
       const categoryExpenses = Object.entries(summary.expensesByCategory)
         .find(([cat]) => cat === formData.category.toLowerCase().replace(/\s+/g, '-'));
-      
+
       budgetData.spent = categoryExpenses ? categoryExpenses[1] : 0;
       addBudget(budgetData);
     }
-    
+
     handleCloseModal();
   };
 
@@ -107,7 +107,7 @@ const Budget = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Budget</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(summary.totalBudget)}</p>
+              <p className="text-2xl font-bold text-gray-900">{formatCurrency(summary.totalBudget, baseCurrency, displayCurrency)}</p>
             </div>
             <div className="p-3 bg-blue-50 rounded-xl">
               <TrendingUp className="w-6 h-6 text-blue-600" />
@@ -118,7 +118,7 @@ const Budget = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Spent</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(summary.totalBudgetSpent)}</p>
+              <p className="text-2xl font-bold text-gray-900">{formatCurrency(summary.totalBudgetSpent, baseCurrency, displayCurrency)}</p>
             </div>
             <div className="p-3 bg-purple-50 rounded-xl">
               <TrendingUp className="w-6 h-6 text-purple-600" />
@@ -130,7 +130,7 @@ const Budget = () => {
             <div>
               <p className="text-sm text-gray-600">Remaining</p>
               <p className={`text-2xl font-bold ${summary.budgetRemaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {formatCurrency(Math.abs(summary.budgetRemaining))}
+                {formatCurrency(Math.abs(summary.budgetRemaining), baseCurrency, displayCurrency)}
               </p>
             </div>
             <div className={`p-3 rounded-xl ${summary.budgetRemaining >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
@@ -161,7 +161,7 @@ const Budget = () => {
         {summary.budgetUsagePercentage >= 100 && (
           <div className="flex items-center gap-2 mt-3 text-red-600">
             <AlertCircle className="w-4 h-4" />
-            <span className="text-sm font-medium">You've exceeded your budget by {formatCurrency(Math.abs(summary.budgetRemaining))}</span>
+            <span className="text-sm font-medium">You've exceeded your budget by {formatCurrency(Math.abs(summary.budgetRemaining), baseCurrency, displayCurrency)}</span>
           </div>
         )}
       </Card>
@@ -182,7 +182,7 @@ const Budget = () => {
           {currentMonthBudgets.map(budget => {
             const percentage = calculatePercentage(budget.spent, budget.limit);
             const status = getBudgetStatus(budget.spent, budget.limit);
-            
+
             return (
               <Card key={budget.id} hover>
                 <div className="space-y-4">
@@ -201,7 +201,7 @@ const Budget = () => {
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Spent</span>
                       <span className="font-semibold text-gray-900">
-                        {formatCurrency(budget.spent)} / {formatCurrency(budget.limit)}
+                        {formatCurrency(budget.spent, baseCurrency, displayCurrency)} / {formatCurrency(budget.limit, baseCurrency, displayCurrency)}
                       </span>
                     </div>
                     <ProgressBar
@@ -212,7 +212,7 @@ const Budget = () => {
                     />
                     <div className="flex justify-between text-xs text-gray-500">
                       <span>{percentage}% used</span>
-                      <span>{formatCurrency(budget.limit - budget.spent)} remaining</span>
+                      <span>{formatCurrency(budget.limit - budget.spent, baseCurrency, displayCurrency)} remaining</span>
                     </div>
                   </div>
 

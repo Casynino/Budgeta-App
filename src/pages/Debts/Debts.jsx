@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Plus, Calendar, User, DollarSign, AlertCircle, CheckCircle, Clock } from 'lucide-react';
-import Card from '../../components/common/Card';
+import { AlertCircle, Calendar, CheckCircle, Clock, DollarSign, Plus, User } from 'lucide-react';
+import { useState } from 'react';
+import Badge from '../../components/common/Badge';
 import Button from '../../components/common/Button';
+import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Modal from '../../components/common/Modal';
-import Select from '../../components/common/Select';
-import Badge from '../../components/common/Badge';
 import ProgressBar from '../../components/common/ProgressBar';
+import Select from '../../components/common/Select';
 import { useFinance } from '../../context/FinanceContext';
-import { formatCurrency, formatDate, isOverdue, getDaysUntilDue } from '../../utils/helpers';
+import { formatCurrency, formatDate, getDaysUntilDue, isOverdue } from '../../utils/helpers';
 
 const Debts = () => {
-  const { debts, addDebt, updateDebt, deleteDebt, makeDebtPayment } = useFinance();
+  const { debts, addDebt, updateDebt, deleteDebt, makeDebtPayment, baseCurrency, displayCurrency } = useFinance();
   const [activeTab, setActiveTab] = useState('iOwe'); // 'iOwe' or 'owedToMe'
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -68,7 +68,7 @@ const Debts = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const debtData = {
       ...formData,
       amount: parseFloat(formData.amount),
@@ -79,7 +79,7 @@ const Debts = () => {
     } else {
       addDebt(debtData, activeTab);
     }
-    
+
     handleCloseModal();
   };
 
@@ -120,7 +120,7 @@ const Debts = () => {
   const getDueDateInfo = (dueDate) => {
     const days = getDaysUntilDue(dueDate);
     if (days === null) return null;
-    
+
     if (days < 0) {
       return { text: `${Math.abs(days)} days overdue`, color: 'text-red-600' };
     }
@@ -153,21 +153,19 @@ const Debts = () => {
         <div className="flex border-b border-gray-200">
           <button
             onClick={() => setActiveTab('iOwe')}
-            className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
-              activeTab === 'iOwe'
+            className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${activeTab === 'iOwe'
                 ? 'text-primary-600 border-b-2 border-primary-600'
                 : 'text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
           >
             I Owe
           </button>
           <button
             onClick={() => setActiveTab('owedToMe')}
-            className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
-              activeTab === 'owedToMe'
+            className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${activeTab === 'owedToMe'
                 ? 'text-primary-600 border-b-2 border-primary-600'
                 : 'text-gray-600 hover:text-gray-900'
-            }`}
+              }`}
           >
             Owed to Me
           </button>
@@ -180,7 +178,7 @@ const Debts = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Amount</p>
-              <p className="text-xl font-bold text-gray-900">{formatCurrency(totalAmount)}</p>
+              <p className="text-xl font-bold text-gray-900">{formatCurrency(totalAmount, baseCurrency, displayCurrency)}</p>
             </div>
             <DollarSign className="w-8 h-8 text-blue-600" />
           </div>
@@ -189,7 +187,7 @@ const Debts = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Paid</p>
-              <p className="text-xl font-bold text-green-600">{formatCurrency(totalPaid)}</p>
+              <p className="text-xl font-bold text-green-600">{formatCurrency(totalPaid, baseCurrency, displayCurrency)}</p>
             </div>
             <CheckCircle className="w-8 h-8 text-green-600" />
           </div>
@@ -198,7 +196,7 @@ const Debts = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Remaining</p>
-              <p className="text-xl font-bold text-orange-600">{formatCurrency(totalRemaining)}</p>
+              <p className="text-xl font-bold text-orange-600">{formatCurrency(totalRemaining, baseCurrency, displayCurrency)}</p>
             </div>
             <Clock className="w-8 h-8 text-orange-600" />
           </div>
@@ -227,7 +225,7 @@ const Debts = () => {
           {currentDebts.map(debt => {
             const percentage = (debt.amountPaid / debt.amount) * 100;
             const dueDateInfo = getDueDateInfo(debt.dueDate);
-            
+
             return (
               <Card key={debt.id} hover className="space-y-4">
                 {/* Header */}
@@ -248,16 +246,16 @@ const Debts = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Amount</span>
-                    <span className="font-semibold text-gray-900">{formatCurrency(debt.amount)}</span>
+                    <span className="font-semibold text-gray-900">{formatCurrency(debt.amount, baseCurrency, displayCurrency)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Paid</span>
-                    <span className="font-semibold text-green-600">{formatCurrency(debt.amountPaid)}</span>
+                    <span className="font-semibold text-green-600">{formatCurrency(debt.amountPaid, baseCurrency, displayCurrency)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Remaining</span>
                     <span className="font-semibold text-orange-600">
-                      {formatCurrency(debt.amount - debt.amountPaid)}
+                      {formatCurrency(debt.amount - debt.amountPaid, baseCurrency, displayCurrency)}
                     </span>
                   </div>
                 </div>
@@ -430,7 +428,7 @@ const Debts = () => {
               <p className="text-sm text-gray-600">Debt to</p>
               <p className="text-lg font-semibold text-gray-900">{selectedDebt.personName}</p>
               <p className="text-sm text-gray-600 mt-2">
-                Remaining: {formatCurrency(selectedDebt.amount - selectedDebt.amountPaid)}
+                Remaining: {formatCurrency(selectedDebt.amount - selectedDebt.amountPaid, baseCurrency, displayCurrency)}
               </p>
             </div>
 

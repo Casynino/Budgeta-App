@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Plus, Search, Filter, Trash2, Edit, TrendingUp, TrendingDown } from 'lucide-react';
-import Card from '../../components/common/Card';
+import { Edit, Plus, Search, Trash2, TrendingDown, TrendingUp } from 'lucide-react';
+import { useState } from 'react';
+import Badge from '../../components/common/Badge';
 import Button from '../../components/common/Button';
+import Card from '../../components/common/Card';
+import CategorySelector from '../../components/common/CategorySelector';
 import Input from '../../components/common/Input';
 import Modal from '../../components/common/Modal';
 import Select from '../../components/common/Select';
-import CategorySelector from '../../components/common/CategorySelector';
-import Badge from '../../components/common/Badge';
-import { useFinance } from '../../context/FinanceContext';
 import { TRANSACTION_CATEGORIES } from '../../constants/categories';
+import { useFinance } from '../../context/FinanceContext';
 import { formatCurrency, formatDate } from '../../utils/helpers';
 
 const Transactions = () => {
-  const { transactions, addTransaction, updateTransaction, deleteTransaction, accounts, selectedAccount } = useFinance();
+  const { transactions, addTransaction, updateTransaction, deleteTransaction, accounts, selectedAccount, baseCurrency, displayCurrency } = useFinance();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -63,7 +63,7 @@ const Transactions = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const transactionData = {
       ...formData,
       amount: parseFloat(formData.amount),
@@ -74,7 +74,7 @@ const Transactions = () => {
     } else {
       addTransaction(transactionData);
     }
-    
+
     handleCloseModal();
   };
 
@@ -84,17 +84,17 @@ const Transactions = () => {
     }
   };
 
-  const categoryOptions = formData.type === 'income' 
-    ? TRANSACTION_CATEGORIES.INCOME 
+  const categoryOptions = formData.type === 'income'
+    ? TRANSACTION_CATEGORIES.INCOME
     : TRANSACTION_CATEGORIES.EXPENSE;
 
   // Filter transactions
   const filteredTransactions = transactions.filter(t => {
     const matchesSearch = t.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         t.category.toLowerCase().includes(searchQuery.toLowerCase());
+      t.category.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = filterType === 'all' || t.type === filterType;
     const matchesCategory = filterCategory === 'all' || t.category === filterCategory;
-    
+
     return matchesSearch && matchesType && matchesCategory;
   });
 
@@ -112,7 +112,7 @@ const Transactions = () => {
   const totalIncome = filteredTransactions
     .filter(t => t.type === 'income')
     .reduce((sum, t) => sum + t.amount, 0);
-  
+
   const totalExpense = filteredTransactions
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0);
@@ -136,7 +136,7 @@ const Transactions = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Income</p>
-              <p className="text-2xl font-bold text-green-600">{formatCurrency(totalIncome)}</p>
+              <p className="text-2xl font-bold text-green-600">{formatCurrency(totalIncome, baseCurrency, displayCurrency)}</p>
             </div>
             <div className="p-3 bg-green-50 rounded-xl">
               <TrendingUp className="w-6 h-6 text-green-600" />
@@ -147,7 +147,7 @@ const Transactions = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Expense</p>
-              <p className="text-2xl font-bold text-red-600">{formatCurrency(totalExpense)}</p>
+              <p className="text-2xl font-bold text-red-600">{formatCurrency(totalExpense, baseCurrency, displayCurrency)}</p>
             </div>
             <div className="p-3 bg-red-50 rounded-xl">
               <TrendingDown className="w-6 h-6 text-red-600" />
@@ -159,7 +159,7 @@ const Transactions = () => {
             <div>
               <p className="text-sm text-gray-600">Net Balance</p>
               <p className={`text-2xl font-bold ${totalIncome - totalExpense >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {formatCurrency(totalIncome - totalExpense)}
+                {formatCurrency(totalIncome - totalExpense, baseCurrency, displayCurrency)}
               </p>
             </div>
             <div className={`p-3 rounded-xl ${totalIncome - totalExpense >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
@@ -216,7 +216,7 @@ const Transactions = () => {
                 {dayTransactions.map(transaction => {
                   const category = [...TRANSACTION_CATEGORIES.INCOME, ...TRANSACTION_CATEGORIES.EXPENSE]
                     .find(c => c.id === transaction.category);
-                  
+
                   return (
                     <div
                       key={transaction.id}
@@ -235,10 +235,9 @@ const Transactions = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className={`text-base font-semibold ${
-                          transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
+                        <span className={`text-base font-semibold ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                          }`}>
+                          {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount, baseCurrency, displayCurrency)}
                         </span>
                         <div className="flex items-center gap-1">
                           <button

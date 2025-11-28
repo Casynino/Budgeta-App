@@ -1,11 +1,10 @@
-import React from 'react';
-import { TrendingUp, Construction } from 'lucide-react';
+import { Construction } from 'lucide-react';
 import Card from '../../components/common/Card';
 import { useFinance } from '../../context/FinanceContext';
 import { formatCurrency } from '../../utils/helpers';
 
 const Investments = () => {
-  const { investments } = useFinance();
+  const { investments, baseCurrency, displayCurrency } = useFinance();
 
   const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
   const totalCurrentValue = investments.reduce((sum, inv) => sum + inv.currentValue, 0);
@@ -23,16 +22,16 @@ const Investments = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <p className="text-sm text-gray-600">Total Invested</p>
-          <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalInvested)}</p>
+          <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalInvested, baseCurrency, displayCurrency)}</p>
         </Card>
         <Card>
           <p className="text-sm text-gray-600">Current Value</p>
-          <p className="text-2xl font-bold text-blue-600">{formatCurrency(totalCurrentValue)}</p>
+          <p className="text-2xl font-bold text-blue-600">{formatCurrency(totalCurrentValue, baseCurrency, displayCurrency)}</p>
         </Card>
         <Card>
           <p className="text-sm text-gray-600">Total Gain/Loss</p>
           <p className={`text-2xl font-bold ${totalGain >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {totalGain >= 0 ? '+' : ''}{formatCurrency(totalGain)}
+            {totalGain >= 0 ? '+' : ''}{formatCurrency(totalGain, baseCurrency, displayCurrency)}
           </p>
         </Card>
         <Card>

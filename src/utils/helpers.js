@@ -1,12 +1,12 @@
-import { format, isAfter, isBefore, parseISO, differenceInDays } from 'date-fns';
-import { formatCurrencyValue, convertCurrency } from '../constants/currencies';
+import { differenceInDays, format, isBefore, parseISO } from 'date-fns';
+import { convertCurrency, formatCurrencyValue } from '../constants/currencies';
 
-export const formatCurrency = (amount, fromCurrency = 'USD', toCurrency = 'USD') => {
+export const formatCurrency = (amount, fromCurrency = 'TZS', toCurrency = 'TZS') => {
   // Convert if currencies are different
-  const convertedAmount = fromCurrency === toCurrency 
-    ? amount 
+  const convertedAmount = fromCurrency === toCurrency
+    ? amount
     : convertCurrency(amount, fromCurrency, toCurrency);
-  
+
   // Format with proper symbol and decimals
   return formatCurrencyValue(convertedAmount, toCurrency);
 };
@@ -38,24 +38,24 @@ export const getDaysUntilDue = (dueDate) => {
 
 export const getFinancialHealthScore = (data) => {
   const { totalIncome, totalExpense, savingsRate, debtRatio, budgetAdherence } = data;
-  
+
   let score = 0;
-  
+
   // Income vs Expense (30 points)
   if (totalIncome > totalExpense) {
     const ratio = (totalIncome - totalExpense) / totalIncome;
     score += Math.min(ratio * 100, 30);
   }
-  
+
   // Savings Rate (25 points)
   score += Math.min(savingsRate, 25);
-  
+
   // Debt Ratio (25 points) - lower is better
   score += Math.max(0, 25 - debtRatio);
-  
+
   // Budget Adherence (20 points)
   score += Math.min(budgetAdherence, 20);
-  
+
   return Math.round(score);
 };
 
@@ -86,20 +86,20 @@ export const groupTransactionsByDate = (transactions) => {
 
 export const calculateMonthlyTrend = (transactions, months = 6) => {
   const monthlyData = {};
-  
+
   transactions.forEach(transaction => {
     const monthKey = formatDate(transaction.date, 'MMM yyyy');
     if (!monthlyData[monthKey]) {
       monthlyData[monthKey] = { income: 0, expense: 0 };
     }
-    
+
     if (transaction.type === 'income') {
       monthlyData[monthKey].income += transaction.amount;
     } else {
       monthlyData[monthKey].expense += transaction.amount;
     }
   });
-  
+
   return Object.entries(monthlyData).map(([month, data]) => ({
     month,
     ...data,
