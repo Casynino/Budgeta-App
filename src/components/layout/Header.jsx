@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Menu, Bell, User, LogOut, Settings as SettingsIcon, ChevronDown } from 'lucide-react';
+import { Bell, ChevronDown, LogOut, Menu, Settings as SettingsIcon } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFinance } from '../../context/FinanceContext';
 import { useAuth } from '../../context/AuthContext';
+import { useFinance } from '../../context/FinanceContext';
 import CurrencySelector from '../common/CurrencySelector';
 import SyncIndicator from '../common/SyncIndicator';
 
@@ -23,13 +23,13 @@ const Header = ({ onMenuClick }) => {
           >
             <Menu className="w-6 h-6 text-gray-400" />
           </button>
-          
+
           <button
             onClick={() => navigate('/dashboard')}
             className="hidden lg:block hover:bg-dark-700 rounded-lg p-2 transition-colors text-left"
           >
             <h2 className="text-xl font-bold text-white">
-              Welcome back! 👋
+              Welcome back, {currentUser?.firstName || 'there'}! 👋
             </h2>
             <p className="text-sm text-gray-400 mt-0.5">
               Here's your financial overview
@@ -43,21 +43,19 @@ const Header = ({ onMenuClick }) => {
           <div className="flex items-center gap-2 bg-dark-700 rounded-xl p-1 border border-dark-600">
             <button
               onClick={() => setMode('personal')}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
-                mode === 'personal'
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${mode === 'personal'
                   ? 'bg-gradient-to-r from-primary-500 to-purple-500 text-white shadow-lg'
                   : 'text-gray-400 hover:text-white'
-              }`}
+                }`}
             >
               Personal
             </button>
             <button
               onClick={() => setMode('business')}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
-                mode === 'business'
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${mode === 'business'
                   ? 'bg-gradient-to-r from-primary-500 to-purple-500 text-white shadow-lg'
                   : 'text-gray-400 hover:text-white'
-              }`}
+                }`}
             >
               Business
             </button>
