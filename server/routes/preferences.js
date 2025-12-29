@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
       // Create default preferences if they don't exist
       const result = await sql`
         INSERT INTO user_preferences (user_id, mode, base_currency, display_currency, theme)
-        VALUES (${req.user.userId}, 'personal', 'USD', 'USD', 'dark')
+        VALUES (${req.user.userId}, 'personal', 'TZS', 'TZS', 'dark')
         RETURNING *
       `;
       return res.json(result[0]);
@@ -52,8 +52,8 @@ router.put('/', async (req, res) => {
         VALUES (
           ${req.user.userId},
           ${mode || 'personal'},
-          ${baseCurrency || 'USD'},
-          ${displayCurrency || 'USD'},
+          ${baseCurrency || 'TZS'},
+          ${displayCurrency || 'TZS'},
           ${theme || 'dark'}
         )
         RETURNING *

@@ -1,7 +1,7 @@
-import express from 'express';
 import bcrypt from 'bcryptjs';
+import express from 'express';
 import sql from '../config/db.js';
-import { generateToken, authenticateToken } from '../middleware/auth.js';
+import { authenticateToken, generateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
     // Create default user preferences
     await sql`
       INSERT INTO user_preferences (user_id, mode, base_currency, display_currency, theme)
-      VALUES (${newUser.id}, 'personal', 'USD', 'USD', 'dark')
+      VALUES (${newUser.id}, 'personal', 'TZS', 'TZS', 'dark')
     `;
 
     // Generate token

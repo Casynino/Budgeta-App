@@ -75,8 +75,8 @@ export const initDatabase = async () => {
         id SERIAL PRIMARY KEY,
         user_id INTEGER UNIQUE REFERENCES users(id) ON DELETE CASCADE,
         mode VARCHAR(20) DEFAULT 'personal',
-        base_currency VARCHAR(10) DEFAULT 'USD',
-        display_currency VARCHAR(10) DEFAULT 'USD',
+        base_currency VARCHAR(10) DEFAULT 'TZS',
+        display_currency VARCHAR(10) DEFAULT 'TZS',
         theme VARCHAR(20) DEFAULT 'dark',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -164,39 +164,39 @@ export const initDatabase = async () => {
     await sql`
       CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)
     `;
-    
+
     await sql`
       CREATE INDEX IF NOT EXISTS idx_accounts_user_id ON accounts(user_id)
     `;
-    
+
     await sql`
       CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON transactions(user_id)
     `;
-    
+
     await sql`
       CREATE INDEX IF NOT EXISTS idx_transactions_account_id ON transactions(account_id)
     `;
-    
+
     await sql`
       CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date)
     `;
-    
+
     await sql`
       CREATE INDEX IF NOT EXISTS idx_budgets_user_id ON budgets(user_id)
     `;
-    
+
     await sql`
       CREATE INDEX IF NOT EXISTS idx_debts_user_id ON debts(user_id)
     `;
-    
+
     await sql`
       CREATE INDEX IF NOT EXISTS idx_investments_user_id ON investments(user_id)
     `;
-    
+
     await sql`
       CREATE INDEX IF NOT EXISTS idx_recurring_payments_user_id ON recurring_payments(user_id)
     `;
-    
+
     await sql`
       CREATE INDEX IF NOT EXISTS idx_goals_user_id ON goals(user_id)
     `;

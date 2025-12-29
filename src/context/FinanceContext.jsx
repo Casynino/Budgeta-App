@@ -97,13 +97,21 @@ export const FinanceProvider = ({ children }) => {
 
           // Load currency preferences from backend FIRST
           if (preferencesData) {
-            setBaseCurrency(preferencesData.base_currency || 'TZS');
-            setDisplayCurrency(preferencesData.display_currency || 'TZS');
+            const prefBase = preferencesData.base_currency || 'TZS';
+            const prefDisplay = preferencesData.display_currency || 'TZS';
+
+            // If backend defaults base_currency to USD but user is displaying in TZS,
+            // the UI will multiply amounts by the USD→TZS rate (e.g. 2500) which users
+            // interpret as a bug. Align storage currency to the display currency.
+            const normalizedBase = prefDisplay === 'TZS' && prefBase === 'USD' ? 'TZS' : prefBase;
+
+            setBaseCurrency(normalizedBase);
+            setDisplayCurrency(prefDisplay);
             setMode(preferencesData.mode || 'personal');
             // Save to localStorage as backup
             localStorage.setItem('budgeta_currency', JSON.stringify({
-              base: preferencesData.base_currency || 'TZS',
-              display: preferencesData.display_currency || 'TZS'
+              base: normalizedBase,
+              display: prefDisplay
             }));
           }
 
