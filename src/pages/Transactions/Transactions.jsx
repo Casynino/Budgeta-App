@@ -8,8 +8,9 @@ import Input from '../../components/common/Input';
 import Modal from '../../components/common/Modal';
 import Select from '../../components/common/Select';
 import { TRANSACTION_CATEGORIES } from '../../constants/categories';
+import { convertCurrency } from '../../constants/currencies';
 import { useFinance } from '../../context/FinanceContext';
-import { formatCurrency, formatDate } from '../../utils/helpers';
+import { formatCurrency, formatDate, parseAmountInput } from '../../utils/helpers';
 
 const Transactions = () => {
   const { transactions, addTransaction, updateTransaction, deleteTransaction, accounts, selectedAccount, baseCurrency, displayCurrency } = useFinance();
@@ -36,7 +37,7 @@ const Transactions = () => {
         accountId: transaction.accountId || (selectedAccount || (accounts.length > 0 ? accounts[0].id : '')),
         type: transaction.type,
         category: transaction.category,
-        amount: transaction.amount,
+        amount: String(convertCurrency(transaction.amount, baseCurrency, displayCurrency)),
         description: transaction.description,
         date: transaction.date.split('T')[0],
         tags: transaction.tags || [],
@@ -64,9 +65,12 @@ const Transactions = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const displayAmount = parseAmountInput(formData.amount);
+    const baseAmount = convertCurrency(displayAmount, displayCurrency, baseCurrency);
+
     const transactionData = {
       ...formData,
-      amount: parseFloat(formData.amount),
+      amount: baseAmount,
     };
 
     if (editingTransaction) {
@@ -316,12 +320,12 @@ const Transactions = () => {
 
           <Input
             label="Amount"
-            type="number"
+            type="text"
+            inputMode="decimal"
             name="amount"
             value={formData.amount}
             onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
             placeholder="0.00"
-            step="0.01"
             min="0"
             required
           />

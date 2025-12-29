@@ -1,6 +1,18 @@
 import { differenceInDays, format, isBefore, parseISO } from 'date-fns';
 import { convertCurrency, formatCurrencyValue } from '../constants/currencies';
 
+export const parseAmountInput = (value) => {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+  if (value === null || value === undefined) return 0;
+
+  const normalized = String(value)
+    .trim()
+    .replace(/[\s,]/g, '');
+
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
 export const formatCurrency = (amount, fromCurrency = 'TZS', toCurrency = 'TZS') => {
   // Convert if currencies are different
   const convertedAmount = fromCurrency === toCurrency
